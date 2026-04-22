@@ -19,3 +19,13 @@ function ownerSignupAPI(data) {
     data: JSON.stringify(data),
   });
 }
+
+// 로그인 API
+function loginAPI(data) {
+  return $.ajax({
+    url: COMMON_URL + "/api/auth/login",
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(data),
+  });
+}

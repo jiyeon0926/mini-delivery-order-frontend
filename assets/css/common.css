@@ -4,29 +4,29 @@ body {
   height: 100%;
 }
 
-/* 회원가입 */
-.form-signin {
+/* 회원가입 및 로그인 */
+.form-auth {
   max-width: 330px;
   padding: 1rem;
 }
 
-.form-signin .form-floating:focus-within {
+.form-auth .form-floating:focus-within {
   z-index: 2;
 }
 
-.form-signin input[type="email"] {
+.form-auth input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.form-signin input[type="password"] {
+.form-auth input[type="password"] {
   margin-bottom: -1px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
 
-.form-signin input[type="nickname"] {
+.form-auth input[type="nickname"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
