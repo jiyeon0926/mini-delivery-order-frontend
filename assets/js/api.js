@@ -47,3 +47,29 @@ function logoutAPI() {
     type: "POST",
   });
 }
+
+// 프로필 조회
+function profileAPI() {
+  return $.ajax({
+    url: COMMON_URL + "/api/users/me",
+    type: "GET",
+  });
+}
+
+// 닉네임 변경 API
+function nicknameAPI(data) {
+  return $.ajax({
+    url: COMMON_URL + "/api/users/me/nickname",
+    type: "PATCH",
+    contentType: "application/json",
+    data: JSON.stringify(data),
+  });
+}
+
+// 회원탈퇴 API
+function deleteAccountAPI() {
+  return $.ajax({
+    url: COMMON_URL + "/api/users/me",
+    type: "DELETE",
+  });
+}

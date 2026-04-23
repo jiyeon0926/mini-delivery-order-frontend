@@ -44,9 +44,7 @@
             >회원가입</a
           >
         </p>
-        <p class="mt-5 mb-3 text-body-secondary">
-          &copy; 2026 Mini Delivery Order by JYHA
-        </p>
+        <p class="mt-5 mb-3 text-body-secondary">&copy; 2026 Eat Now</p>
       </form>
     </main>
     <script src="/assets/js/api.js"></script>
@@ -66,7 +64,7 @@
 
             const role = response.data.role;
             if (role == "CUSTOMER") {
-              window.location.href = "/pages/customer/main.html";
+              window.location.href = "/pages/user/nickname.html";
             } else if (role == "OWNER") {
               window.location.href = "/pages/owner/main.html";
             }
