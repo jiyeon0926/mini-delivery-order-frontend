@@ -73,3 +73,13 @@ function deleteAccountAPI() {
     type: "DELETE",
   });
 }
+
+// 비밀번호 변경 API
+function passwordAPI(data) {
+  return $.ajax({
+    url: COMMON_URL + "/api/users/me/password",
+    type: "PATCH",
+    contentType: "application/json",
+    data: JSON.stringify(data),
+  });
+}
