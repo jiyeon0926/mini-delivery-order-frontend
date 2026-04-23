@@ -118,6 +118,7 @@
               <button
                 class="w-50 btn btn-outline-secondary btn-lg"
                 type="button"
+                id="cancelBtn"
               >
                 취소
               </button>
@@ -158,6 +159,10 @@
           .fail(function () {
             alert("닉네임 변경을 실패하였습니다.");
           });
+      });
+
+      $("#cancelBtn").on("click", function () {
+        window.location.href = "/pages/customer/main.html";
       });
     </script>
   </body>
