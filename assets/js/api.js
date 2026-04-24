@@ -83,3 +83,17 @@ function passwordAPI(data) {
     data: JSON.stringify(data),
   });
 }
+
+// 가게 검색 API
+function searchStoresAPI(keyword) {
+  const params = {};
+  if (keyword != null) {
+    params.keyword = keyword;
+  }
+
+  return $.ajax({
+    url: COMMON_URL + "/api/stores",
+    type: "GET",
+    data: params,
+  });
+}

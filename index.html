@@ -131,25 +131,13 @@
           </div>
         </div>
       </div>
-      <!-- 가게 목록 -->
-      <div
-        class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center"
-      >
-        <div class="list-group">
-          <a
-            href="#"
-            class="list-group-item list-group-item-action d-flex gap-3 py-3"
-            aria-current="true"
-          >
-            <i class="bi bi-shop fs-5"></i>
-            <div class="d-flex gap-2 w-100 justify-content-between">
-              <div>
-                <p class="mb-0 fw-bold">가게 이름</p>
-                <p class="mb-0">최소 주문 금액</p>
-              </div>
-            </div>
-          </a>
-        </div>
+      <div class="container py-5">
+        <!-- 가게 목록 -->
+        <div
+          class="list-group mx-auto"
+          id="storeList"
+          style="max-width: 680px"
+        ></div>
       </div>
     </main>
     <footer class="pt-3 pb-4 text-body-secondary text-center text-small">
@@ -162,8 +150,54 @@
     <script src="/assets/js/api.js"></script>
     <script src="/assets/js/common.js"></script>
     <script>
+      function renderStores(data) {
+        const storeListHtml = data
+          .map((d) => {
+            const statusText =
+              d.storeStatus === "OPEN" ? "영업 중" : "영업 종료";
+            const statusClass =
+              d.storeStatus === "OPEN" ? "text-success" : "text-danger";
+
+            return `
+              <a
+              href="/pages/customer/store-detail.html?storeId=${d.id}"
+              class="list-group-item list-group-item-action d-flex gap-3 py-3"
+              >
+                <i class="bi bi-shop fs-5"></i>
+                <div class="d-flex w-100 justify-content-between">
+                  <div class="d-flex flex-column">
+                    <div class="small text-warning mb-1">
+                      ★ ${d.averageRating} <span class="text-muted">(${d.reviewCount})</span>
+                    </div>
+                    <p class="mb-1 fw-bold">${d.name}</p>
+                    <p class="mb-1 text-muted small">최소 주문 ${d.minOrderAmount}원</p>
+                  </div>
+                  <div class="text-end small fw-semibold ${statusClass}">
+                    ${statusText}
+                  </div>
+                </div>
+              </a>
+            `;
+          })
+          .join("");
+
+        $("#storeList").html(storeListHtml);
+      }
+
+      // keyword 기본값 null
+      function loadStores(keyword = null) {
+        searchStoresAPI(keyword)
+          .done(function (response) {
+            renderStores(response.data);
+          })
+          .fail(function () {
+            $("#storeList").html("<p class='text-center'>가게가 없습니다.</p>");
+          });
+      }
+
       $(document).ready(function () {
         updateCustomerAuthUI();
+        loadStores();
       });
 
       $(".searchBtn").on("click", function () {
@@ -172,6 +206,16 @@
           $("#search").removeClass("d-none");
         } else if (!isHidden) {
           $("#search").addClass("d-none");
+          loadStores();
+        }
+      });
+
+      $("#search").on("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+
+          const keyword = $(this).val().trim();
+          loadStores(keyword);
         }
       });
     </script>
