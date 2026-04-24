@@ -35,12 +35,30 @@
             />
           </form>
           <i class="bi bi-search text-white fs-5 searchBtn"></i>
-          <a class="nav-link text-white" href="#">
+          <a
+            class="nav-link text-white cart-menu d-none"
+            href="/pages/customer/cart.html"
+            title="장바구니"
+          >
             <i class="bi bi-cart fs-5"></i>
           </a>
+          <a
+            class="nav-link text-white login-menu"
+            href="/pages/auth/login.html"
+            title="로그인"
+          >
+            <i class="bi bi-box-arrow-in-right fs-5"></i>
+          </a>
+          <button
+            class="nav-link btn btn-link text-white logout-menu d-none"
+            id="logoutBtn"
+            title="로그아웃"
+          >
+            <i class="bi bi-box-arrow-right fs-5"></i>
+          </button>
           <!-- 햄버거 -->
           <button
-            class="navbar-toggler"
+            class="navbar-toggler d-none"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarMenu"
@@ -61,29 +79,18 @@
               <a
                 class="nav-link text-primary"
                 href="/pages/customer/my-reviews.html"
-                >리뷰관리</a
+                >리뷰내역</a
               >
             </li>
-            <li class="nav-item nickname-menu d-none">
+            <li class="nav-item">
               <a class="nav-link" href="/pages/user/nickname.html"
                 >닉네임 변경</a
               >
             </li>
-            <li class="nav-item password-menu d-none">
+            <li class="nav-item">
               <a class="nav-link" href="/pages/user/password.html"
                 >비밀번호 변경</a
               >
-            </li>
-            <li class="nav-item login-menu">
-              <a class="nav-link" href="/pages/auth/login.html">로그인</a>
-            </li>
-            <li class="nav-item logout-menu d-none">
-              <button
-                class="nav-link btn btn-link text-start text-secondary"
-                id="logoutBtn"
-              >
-                로그아웃
-              </button>
             </li>
             <li class="nav-item">
               <button
@@ -138,7 +145,7 @@
             <div class="d-flex gap-2 w-100 justify-content-between">
               <div>
                 <p class="mb-0 fw-bold">가게 이름</p>
-                <p class="mb-0">최소 주문 금액 9,000원</p>
+                <p class="mb-0">최소 주문 금액</p>
               </div>
             </div>
           </a>
