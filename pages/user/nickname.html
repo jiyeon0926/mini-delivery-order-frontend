@@ -58,17 +58,20 @@
                 >리뷰관리</a
               >
             </li>
-            <li class="nav-item">
+            <li class="nav-item nickname-menu d-none">
               <a class="nav-link" href="/pages/user/nickname.html"
                 >닉네임 변경</a
               >
             </li>
-            <li class="nav-item">
+            <li class="nav-item password-menu d-none">
               <a class="nav-link" href="/pages/user/password.html"
                 >비밀번호 변경</a
               >
             </li>
-            <li class="nav-item">
+            <li class="nav-item login-menu">
+              <a class="nav-link" href="/pages/auth/login.html">로그인</a>
+            </li>
+            <li class="nav-item logout-menu d-none">
               <button
                 class="nav-link btn btn-link text-start text-secondary"
                 id="logoutBtn"
@@ -140,6 +143,10 @@
     <script src="/assets/js/api.js"></script>
     <script src="/assets/js/common.js"></script>
     <script>
+      $(document).ready(function () {
+        updateAuthUI();
+      });
+
       profileAPI().done(function (response) {
         const nickname = response.data.nickname;
         $("#nickname").val(nickname);
@@ -154,7 +161,7 @@
 
         nicknameAPI(data)
           .done(function () {
-            window.location.href = "/pages/customer/main.html";
+            window.location.href = "/index.html";
           })
           .fail(function () {
             alert("닉네임 변경을 실패하였습니다.");
@@ -162,7 +169,7 @@
       });
 
       $("#cancelBtn").on("click", function () {
-        window.location.href = "/pages/customer/main.html";
+        window.location.href = "/index.html";
       });
     </script>
   </body>

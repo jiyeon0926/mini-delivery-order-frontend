@@ -1,13 +1,17 @@
-// 로그인 시 로그인 → 로그아웃 버튼으로 교체
+// 인증 UI로 변경
 function updateAuthUI() {
   const token = localStorage.getItem("accessToken");
 
   if (token) {
     $(".login-menu").addClass("d-none");
     $(".logout-menu").removeClass("d-none");
+    $(".password-menu").removeClass("d-none");
+    $(".nickname-menu").removeClass("d-none");
   } else if (!token) {
     $(".login-menu").removeClass("d-none");
     $(".logout-menu").addClass("d-none");
+    $(".password-menu").addClass("d-none");
+    $(".nickname-menu").addClass("d-none");
   }
 }
 
