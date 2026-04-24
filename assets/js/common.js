@@ -1,5 +1,5 @@
 // 인증 UI로 변경
-function updateAuthUI() {
+function updateCustomerAuthUI() {
   const token = localStorage.getItem("accessToken");
 
   if (token) {
