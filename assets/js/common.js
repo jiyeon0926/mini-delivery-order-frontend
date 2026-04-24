@@ -1,3 +1,20 @@
+// 인증 UI로 변경
+function updateAuthUI() {
+  const token = localStorage.getItem("accessToken");
+
+  if (token) {
+    $(".login-menu").addClass("d-none");
+    $(".logout-menu").removeClass("d-none");
+    $(".password-menu").removeClass("d-none");
+    $(".nickname-menu").removeClass("d-none");
+  } else if (!token) {
+    $(".login-menu").removeClass("d-none");
+    $(".logout-menu").addClass("d-none");
+    $(".password-menu").addClass("d-none");
+    $(".nickname-menu").addClass("d-none");
+  }
+}
+
 // 로그아웃 버튼 클릭 시 동작
 $("#logoutBtn").on("click", function () {
   logoutAPI()
