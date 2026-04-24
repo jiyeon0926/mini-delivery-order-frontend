@@ -105,7 +105,7 @@
       </div>
       <p class="mt-4 mb-1 text-body-secondary" style="font-size: 0.8rem">
         이미 계정이 있으신가요?
-        <a href="../../index.html" class="text-dark fw-bold">로그인</a>
+        <a href="/pages/auth/login.html" class="text-dark fw-bold">로그인</a>
       </p>
       <p class="mt-5 mb-3 text-body-secondary">&copy; 2026 Eat Now</p>
     </main>
@@ -141,7 +141,7 @@
         customerSignupAPI(data)
           .done(function () {
             alert("회원가입을 성공하였습니다.");
-            window.location.href = "/index.html";
+            window.location.href = "/pages/auth/login.html";
           })
           .fail(function () {
             alert("회원가입을 실패하였습니다.");
@@ -160,7 +160,7 @@
         ownerSignupAPI(data)
           .done(function () {
             alert("회원가입을 성공하였습니다.");
-            window.location.href = "/index.html";
+            window.location.href = "/pages/auth/login.html";
           })
           .fail(function (err) {
             alert("회원가입을 실패하였습니다.");
