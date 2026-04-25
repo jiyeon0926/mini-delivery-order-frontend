@@ -105,3 +105,89 @@ function addCartItemAPI(data) {
     data: JSON.stringify(data),
   });
 }
+
+// 장바구니 아이템 조회 API
+function cartAPI() {
+  return $.ajax({
+    url: COMMON_URL + "/api/cart",
+    type: "GET",
+  });
+}
+
+// 장바구니 아이템 삭제 API
+function deleteCartItemAPI(itemId) {
+  return $.ajax({
+    url: COMMON_URL + `/api/cart/items/${itemId}`,
+    type: "DELETE",
+  });
+}
+
+// 아이템 수량 변경 API
+function updateItemQuantityAPI(itemId, data) {
+  return $.ajax({
+    url: COMMON_URL + `/api/cart/items/${itemId}`,
+    type: "PATCH",
+    contentType: "application/json",
+    data: JSON.stringify(data),
+  });
+}
+
+// 주문 API
+function orderAPI(data) {
+  return $.ajax({
+    url: COMMON_URL + "/api/orders",
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(data),
+  });
+}
+
+// 고객 주문 내역 조회 API
+function customerOrdersAPI() {
+  return $.ajax({
+    url: COMMON_URL + "/api/orders",
+    type: "GET",
+  });
+}
+
+// 고객 주문 단건 조회 API
+function customerOrderDetailAPI(orderId) {
+  return $.ajax({
+    url: COMMON_URL + `/api/orders/${orderId}`,
+    type: "GET",
+  });
+}
+
+// 주문 취소 API
+function cancelOrderAPI(orderId) {
+  return $.ajax({
+    url: COMMON_URL + `/api/orders/${orderId}`,
+    type: "DELETE",
+  });
+}
+
+// 리뷰 작성 API
+function createReviewAPI(orderId, data) {
+  return $.ajax({
+    url: COMMON_URL + `/api/orders/${orderId}/review`,
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(data),
+  });
+}
+
+// 가게 리뷰 조회 API
+function storeReviewsAPI(storeId) {
+  return $.ajax({
+    url: COMMON_URL + `/api/stores/${storeId}/reviews`,
+    type: "GET",
+  });
+}
+
+// 내 리뷰만 조회 API
+function myReviewsAPI() {
+  return $.ajax({
+    url: COMMON_URL + "/api/reviews/me",
+    type: "GET",
+  });
+}
