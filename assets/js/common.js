@@ -1,3 +1,21 @@
+// 모든 AJAX 요청 전에 공통으로 실행
+$.ajaxSetup({
+  beforeSend: function (xhr) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      xhr.setRequestHeader("Authorization", "Bearer " + token);
+    }
+  },
+  error: function (xhr) {
+    if (xhr.status === 401) {
+      localStorage.removeItem("accessToken");
+
+      alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
+      location.href = "/pages/auth/login.html";
+    }
+  },
+});
+
 // 인증 고객 UI로 변경
 function updateCustomerAuthUI() {
   const token = localStorage.getItem("accessToken");
@@ -43,3 +61,8 @@ $("#deleteAccountBtn").on("click", function () {
       alert("회원탈퇴를 실패하였습니다.");
     });
 });
+
+// 09:00:00 → 09:00
+function formatTime(time) {
+  return time.slice(0, 5);
+}

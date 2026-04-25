@@ -1,15 +1,5 @@
 const COMMON_URL = "http://localhost:8080";
 
-// 모든 AJAX 요청 전에 공통으로 실행
-$.ajaxSetup({
-  beforeSend: function (xhr) {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      xhr.setRequestHeader("Authorization", "Bearer " + token);
-    }
-  },
-});
-
 // 고객 회원가입 API
 function customerSignupAPI(data) {
   return $.ajax({
@@ -95,5 +85,23 @@ function searchStoresAPI(keyword) {
     url: COMMON_URL + "/api/stores",
     type: "GET",
     data: params,
+  });
+}
+
+// 가게 단건 조회 API
+function storeDetailAPI(storeId) {
+  return $.ajax({
+    url: COMMON_URL + `/api/stores/${storeId}`,
+    type: "GET",
+  });
+}
+
+// 장바구니 아이템 추가 API
+function addCartItemAPI(data) {
+  return $.ajax({
+    url: COMMON_URL + "/api/cart/items",
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(data),
   });
 }
