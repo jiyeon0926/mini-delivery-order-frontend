@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="generator" content="Astro v5.13.2" />
+    <title>Eat Now</title>
+    <link
+      rel="canonical"
+      href="https://getbootstrap.com/docs/5.3/examples/navbars/"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <script src="/assets/js/color-modes.js"></script>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/css/common.css" rel="stylesheet" />
+  </head>
+  <body class="bg-body-tertiary">
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/index.html">Eat Now</a>
+        <div class="d-flex align-items-center gap-3 ms-auto">
+          <a
+            class="nav-link text-white cart-menu d-none"
+            href="/pages/customer/cart.html"
+            title="장바구니"
+          >
+            <i class="bi bi-cart fs-5"></i>
+          </a>
+          <a
+            class="nav-link text-white login-menu"
+            href="/pages/auth/login.html"
+            title="로그인"
+          >
+            <i class="bi bi-box-arrow-in-right fs-5"></i>
+          </a>
+          <button
+            class="nav-link btn btn-link text-white logout-menu d-none"
+            id="logoutBtn"
+            title="로그아웃"
+          >
+            <i class="bi bi-box-arrow-right fs-5"></i>
+          </button>
+          <!-- 햄버거 -->
+          <button
+            class="navbar-toggler d-none"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarMenu"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse mt-2" id="navbarMenu">
+          <ul class="navbar-nav me-auto mb-2">
+            <li class="nav-item">
+              <a
+                class="nav-link text-primary"
+                href="/pages/customer/order-list.html"
+                >주문내역</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link text-primary"
+                href="/pages/customer/my-reviews.html"
+                >리뷰내역</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/pages/user/nickname.html"
+                >닉네임 변경</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/pages/user/password.html"
+                >비밀번호 변경</a
+              >
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link btn btn-link text-start text-danger"
+                id="deleteAccountBtn"
+              >
+                회원탈퇴
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container py-5">
+        <div class="card mx-auto" style="max-width: 680px">
+          <div class="card-body" id="storeDetail">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-column">
+                <p class="mb-1 fw-bold" id="storeName"></p>
+                <a
+                  href="#"
+                  class="text-decoration-none"
+                  title="리뷰"
+                  id="reviewLink"
+                >
+                  <div class="small mb-1">
+                    <span class="text-warning" id="averageRating"></span>
+                    <span class="text-muted" id="reviewCount"></span>
+                    <i class="text-muted bi bi-chevron-right"></i>
+                  </div>
+                </a>
+                <p class="mb-1 text-muted small">
+                  <strong>최소 주문</strong> <span id="minOrderAmount"></span>원
+                </p>
+                <p class="mb-1 text-muted small">
+                  <strong>주소</strong> <span id="address"></span>
+                </p>
+                <p class="mb-1 text-muted small">
+                  <strong>영업 시간</strong> <span id="openTime"></span> ~
+                  <span id="closeTime"></span>
+                </p>
+              </div>
+              <div class="text-end small fw-semibold" id="storeStatus"></div>
+            </div>
+          </div>
+        </div>
+        <!-- 메뉴 목록 -->
+        <div
+          class="list-group mx-auto py-5"
+          id="menuList"
+          style="max-width: 680px"
+        ></div>
+      </div>
+    </main>
+    <footer class="pt-3 pb-4 text-body-secondary text-center text-small">
+      <p class="mb-1">&copy; 2026 Eat Now</p>
+    </footer>
+    <script
+      src="/assets/js/bootstrap.bundle.min.js"
+      class="astro-vvvwv3sm"
+    ></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/common.js"></script>
+    <script>
+      function renderMenus(menus) {
+        const token = localStorage.getItem("accessToken");
+        const menuListHtml = menus
+          .map(
+            (m) =>
+              `
+                <div class="list-group-item d-flex gap-3 py-3">
+                    <i class="bi bi-menu-button-wide fs-5"></i>
+                    <div class="d-flex w-100 justify-content-between">
+                        <div class="d-flex flex-column">
+                            <p class="mb-1 fw-bold">${m.menuName}</p>
+                            <p class="mb-1 text-muted small">${m.price}원</p>
+                        </div>
+                        <button
+                            class="text-dark fs-2 fw-bold add-cart-item ${token ? "" : "d-none"}"
+                            data-menu-id="${m.menuId}"
+                            style="background: none; border: none"
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
+            `,
+          )
+          .join("");
+
+        $("#menuList").html(menuListHtml);
+      }
+
+      function loadStoreDetail() {
+        const params = new URLSearchParams(window.location.search);
+        const storeId = params.get("storeId");
+
+        storeDetailAPI(storeId)
+          .done(function (response) {
+            const storeName = response.data.storeName;
+            const averageRating = response.data.averageRating;
+            const reviewCount = response.data.reviewCount;
+            const minOrderAmount = response.data.minOrderAmount;
+            const address = response.data.address;
+            const openTime = response.data.openTime;
+            const closeTime = response.data.closeTime;
+            const storeStatus = response.data.storeStatus;
+
+            $("#storeName").text(storeName);
+            $("#averageRating").text(`★ ${averageRating}`);
+            $("#reviewCount").text(`(${reviewCount})`);
+            $("#minOrderAmount").text(minOrderAmount);
+            $("#address").text(address);
+            $("#openTime").text(formatTime(openTime));
+            $("#closeTime").text(formatTime(closeTime));
+
+            const statusText = storeStatus === "OPEN" ? "영업 중" : "영업 종료";
+            const statusClass =
+              storeStatus === "OPEN" ? "text-success" : "text-danger";
+            $("#storeStatus").text(statusText).addClass(statusClass);
+
+            $("#reviewLink").attr(
+              "href",
+              `/pages/customer/store-reviews.html?storeId=${storeId}`,
+            );
+
+            renderMenus(response.data.menus);
+          })
+          .fail(function () {
+            $("#storeDetail").html(
+              "<p class='text-center'>가게 정보가 없습니다.</p>",
+            );
+          });
+      }
+
+      $(document).ready(function () {
+        updateCustomerAuthUI();
+        loadStoreDetail();
+      });
+
+      $(document).on("click", ".add-cart-item", function () {
+        const menuId = $(this).data("menu-id");
+
+        const data = {
+          menuId: menuId,
+          quantity: 1,
+        };
+
+        addCartItemAPI(data)
+          .done(function () {
+            alert("장바구니에 담았습니다.");
+          })
+          .fail(function (xhr) {
+            if (xhr.status === 400) {
+              alert("현재 영업 중이 아닙니다.");
+            }
+
+            if (xhr.status === 409) {
+              alert("장바구니에서 수량을 변경해주세요.");
+            }
+          });
+      });
+    </script>
+  </body>
+</html>
