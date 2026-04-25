@@ -27,68 +27,7 @@
   <body class="bg-body-tertiary">
     <nav class="navbar navbar-dark bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/index.html">Eat Now</a>
-        <div class="d-flex align-items-center gap-3 ms-auto">
-          <a
-            class="nav-link text-white cart-menu d-none"
-            href="/pages/customer/cart.html"
-            title="장바구니"
-          >
-            <i class="bi bi-cart fs-5"></i>
-          </a>
-          <button
-            class="nav-link btn btn-link text-white"
-            id="logoutBtn"
-            title="로그아웃"
-          >
-            <i class="bi bi-box-arrow-right fs-5"></i>
-          </button>
-          <!-- 햄버거 -->
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarMenu"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-        </div>
-        <div class="collapse navbar-collapse mt-2" id="navbarMenu">
-          <ul class="navbar-nav me-auto mb-2">
-            <li class="nav-item">
-              <a
-                class="nav-link text-primary"
-                href="/pages/customer/order-list.html"
-                >주문내역</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link text-primary"
-                href="/pages/customer/my-reviews.html"
-                >리뷰내역</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/pages/user/nickname.html"
-                >닉네임 변경</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/pages/user/password.html"
-                >비밀번호 변경</a
-              >
-            </li>
-            <li class="nav-item">
-              <button
-                class="nav-link btn btn-link text-start text-danger"
-                id="deleteAccountBtn"
-              >
-                회원탈퇴
-              </button>
-            </li>
-          </ul>
-        </div>
+        <a class="navbar-brand" href="#" id="mainLink">Eat Now</a>
       </div>
     </nav>
     <div class="container">
@@ -143,33 +82,39 @@
     <script src="/assets/js/api.js"></script>
     <script src="/assets/js/common.js"></script>
     <script>
+      let role = null;
+
+      function redirectByRole() {
+        window.location.href =
+          role === "CUSTOMER" ? "/index.html" : "/pages/owner/owner-main.html";
+      }
+
       $(document).ready(function () {
         updateCustomerAuthUI();
-      });
 
-      profileAPI().done(function (response) {
-        const nickname = response.data.nickname;
-        $("#nickname").val(nickname);
-      });
+        profileAPI().done(function (response) {
+          const nickname = response.data.nickname;
+          role = response.data.role;
 
-      $("form").on("submit", function (e) {
-        e.preventDefault();
+          $("#nickname").val(nickname);
+        });
 
-        const data = {
-          nickname: $("#newNickname").val().trim(),
-        };
+        $("form").on("submit", function (e) {
+          e.preventDefault();
 
-        nicknameAPI(data)
-          .done(function () {
-            window.location.href = "/index.html";
-          })
-          .fail(function () {
-            alert("닉네임 변경을 실패하였습니다.");
-          });
-      });
+          const data = {
+            nickname: $("#newNickname").val().trim(),
+          };
 
-      $("#cancelBtn").on("click", function () {
-        window.location.href = "/index.html";
+          nicknameAPI(data)
+            .done(redirectByRole)
+            .fail(function () {
+              alert("닉네임 변경을 실패하였습니다.");
+            });
+        });
+
+        $("#cancelBtn").on("click", redirectByRole);
+        $("#mainLink").on("click", redirectByRole);
       });
     </script>
   </body>
