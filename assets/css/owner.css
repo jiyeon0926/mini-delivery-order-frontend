@@ -1,0 +1,318 @@
+:root{
+    --bg:#fbfbfb;
+    --sidebar:#ffffff;
+    --sidebar-line:#e9ecef;
+    --card:#ffffff;
+    --card-line:#e6e6e6;
+  
+    --text:#111827;
+    --muted:#6b7280;
+  
+    --accent:#19b7b0;        /* 좌측 하이라이트 */
+    --accent-soft:#e8f7f6;   /* active 배경 */
+  
+    --dot-pending:#12b886;
+    --dot-cooking:#f59f00;
+    --dot-delivering:#3b82f6;
+
+  }
+  
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans KR",Arial,sans-serif;
+    color:var(--text);
+    background:var(--bg);
+  }
+  
+  /* Layout */
+  .layout{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns: 280px 1fr;
+  }
+  
+  /* Sidebar */
+  .sidebar{
+    background:var(--sidebar);
+    border-right:1px solid var(--sidebar-line);
+  }
+  
+  .brand{
+    padding:22px 22px 18px;
+    font-weight:900;
+    font-size:34px;
+    letter-spacing:-0.2px;
+  }
+  
+  .side{padding:8px 0 16px;}
+  .side-title{
+    padding:10px 22px;
+    font-size:12px;
+    font-weight:900;
+    color:#f04438;
+  }
+  
+  .side-item{
+    display:flex;
+    align-items:center;
+    padding:14px 22px;
+    text-decoration:none;
+    color:inherit;
+    font-weight:750;
+    position:relative;
+  }
+  
+  .side-item.active{
+    background:var(--accent-soft);
+    color:var(--accent);
+  }
+  
+  .side-item.active::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:3px;
+    background:var(--accent);
+  }
+  
+  .store-list{padding-top:6px;}
+  .store-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px 22px;
+    cursor:pointer;
+  }
+  
+  .store-name{font-weight:800;}
+  .store-badge{
+    font-size:12px;
+    font-weight:900;
+    padding:4px 10px;
+    border-radius:999px;
+    background:#f3f4f6;
+    color:#6b7280;
+  }
+  .store-badge.open{
+    background:#e7f9f7;
+    color:#0f766e;
+  }
+  
+  /* Main */
+  .main{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh; /* 화면 높이 채우기 */
+  }
+  .topbar{
+    height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 22px;
+    background:#fff;
+    border-bottom:1px solid var(--sidebar-line);
+  }
+  
+  .topbar-title{
+    font-size:16px;
+    font-weight:900;
+    color:#374151;
+  }
+  
+  .topbar-actions{display:flex; gap:10px;}
+  .icon-btn{
+    width:34px;
+    height:34px;
+    border:1px solid var(--sidebar-line);
+    background:#fff;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .icon{font-size:16px; line-height:1;}
+  
+  /* Content */
+  .content{
+    padding:22px;
+    flex:1;            /* 핵심 */
+    min-height:0;      /* overflow 계산 안정화(있으면 좋음) */
+  }
+  .grid{
+    display:grid;
+    grid-template-columns: 2fr 1fr;
+    gap:22px;
+    align-items:stretch; /* start → stretch */
+  }
+  
+  .card{
+    background:var(--card);
+    border:1px solid var(--card-line);
+    border-radius:12px;
+    padding:18px 18px;
+  }
+  
+  .card-title{
+    margin:0 0 18px;
+    font-size:18px;
+    font-weight:950;
+  }
+  
+ /* topbar 아래 남는 높이를 주문 카드가 먹게 */
+.orders{
+    height: calc(100vh - 72px - (22px * 2)); 
+    /* 72px = topbar height, 22px*2 = content 위아래 padding */
+  }
+  .orders-rows{display:grid; gap:16px;}
+  .orders-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:6px 2px;
+  }
+
+/* 주문 카드 텍스트(신규/조리중/배달중) */
+    .orders-row .label{
+        font-size: calc(14px * var(--content-scale));
+    }
+  
+  .orders-row .left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-weight:850;
+  }
+  
+  .dot{
+    width:8px; height:8px;
+    border-radius:999px;
+    background:#9ca3af;
+  }
+  .pending .dot{background:var(--dot-pending)}
+  .cooking .dot{background:var(--dot-cooking)}
+  .delivering .dot{background:var(--dot-delivering)}
+  
+  .orders-row .right{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    min-width:110px;
+    justify-content:flex-end;
+  }
+  .orders-row strong{font-size:22px; font-weight:950;}
+  .unit{font-size:12px; font-weight:900; color:var(--muted);}
+  
+  .row-divider{
+    height:1px;
+    background:#efefef;
+  }
+  
+  /* Status column: 개별 카드가 쌓이는 형태 */
+  .status-col{
+    display: flex;
+    min-height: 0;
+  }
+ /* 3) statusList(= .status-card)가 컬럼 높이를 꽉 채우게 */
+.status-card{
+    height: 100%;
+    flex: 1;
+    display: flex;          /* 기존 grid → flex로 바꾸는 포인트 */
+    flex-direction: column;
+    gap: 14px;
+  }
+  
+  .status-item{
+    background:#fff;
+    border:1px solid var(--card-line);
+    border-radius:12px;
+    padding:14px 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex: 1;
+  min-height: 0;
+  }
+  
+  .status-meta{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .status-name{font-weight:950;}
+  .status-sub{font-size:12px; font-weight:900; color:var(--muted);}
+  
+  /* Toggle (첫 이미지처럼 연한 토글) */
+  .switch{
+    position:relative;
+    width:52px;
+    height:28px;
+  }
+  .switch input{
+    appearance:none;
+    width:52px;
+    height:28px;
+    margin:0;
+    border-radius:999px;
+    border:1px solid #d1d5db;
+    background:#f3f4f6;
+    cursor:pointer;
+    transition:background 160ms ease, border-color 160ms ease;
+  }
+  .switch input::after{
+    content:"";
+    position:absolute;
+    top:3px;
+    left:3px;
+    width:22px;
+    height:22px;
+    border-radius:999px;
+    background:#fff;
+    box-shadow:0 1px 2px rgba(0,0,0,.18);
+    transition:transform 160ms ease;
+  }
+  .switch input:checked{
+    background:#e6faf9;
+    border-color:#b7efeb;
+  }
+  .switch input:checked::after{ transform:translateX(24px); }
+  
+  @media (max-width: 980px){
+    .layout{grid-template-columns:1fr;}
+    .sidebar{display:none;}
+    .grid{grid-template-columns:1fr; }
+  }
+
+  :root{ --content-scale: 1.8; } /* 숫자만 올리면 전체가 커짐 */
+
+.orders-row .label{
+  font-size: calc(14px * var(--content-scale));
+}
+
+.orders-row strong{
+  font-size: calc(22px * var(--content-scale));
+}
+
+.unit{
+  font-size: calc(12px * var(--content-scale));
+}
+
+.status-name{
+  font-size: calc(14px * var(--content-scale));
+}
+
+.status-sub{
+  font-size: calc(12px * var(--content-scale));
+}
+
+.store-name{
+  font-size: calc(14px * var(--content-scale));
+}
+
+.store-badge{
+  font-size: calc(12px * var(--content-scale));
+}

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>사장 대시보드</title>
+    <link rel="stylesheet" href="../../assets/css/owner.css" />
+  </head>
+
+  <body>
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="brand">Eat-Now</div>
+
+        <nav class="side">
+          <div class="side-section">
+            <div class="side-title">메뉴</div>
+
+            <a class="side-item active" href="#" aria-current="page">
+              <span>대시보드</span>
+            </a>
+
+            <a class="side-item" href="#" id="goMyStores">
+              <span>내 가게</span>
+            </a>
+          </div>
+
+          <div class="side-section">
+            <div class="store-list" id="storeList"></div>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main -->
+      <section class="main">
+        <header class="topbar">
+          <div class="topbar-title">사장 대시보드</div>
+
+          <div class="topbar-actions">
+            <button class="icon-btn" type="button" aria-label="프로필">
+              <span class="icon">👤</span>
+            </button>
+            <button class="icon-btn" type="button" aria-label="메뉴">
+              <span class="icon">≡</span>
+            </button>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="grid">
+            <!-- Orders -->
+            <section class="card orders">
+              <h2 class="card-title">오늘의 주문 (전체)</h2>
+
+              <div class="orders-rows">
+                <div class="orders-row pending">
+                  <div class="left">
+                    <span class="dot" aria-hidden="true"></span>
+                    <span class="label">신규</span>
+                  </div>
+                  <div class="right">
+                    <strong id="countPending">0</strong>
+                    <span class="unit">건</span>
+                  </div>
+                </div>
+
+                <div class="row-divider" aria-hidden="true"></div>
+
+                <div class="orders-row cooking">
+                  <div class="left">
+                    <span class="dot" aria-hidden="true"></span>
+                    <span class="label">조리 중</span>
+                  </div>
+                  <div class="right">
+                    <strong id="countCooking">0</strong>
+                    <span class="unit">건</span>
+                  </div>
+                </div>
+
+                <div class="row-divider" aria-hidden="true"></div>
+
+                <div class="orders-row delivering">
+                  <div class="left">
+                    <span class="dot" aria-hidden="true"></span>
+                    <span class="label">배달 중</span>
+                  </div>
+                  <div class="right">
+                    <strong id="countDelivering">0</strong>
+                    <span class="unit">건</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Status -->
+            <section class="status-col">
+              <div class="status-card" id="statusList"></div>
+            </section>
+          </div>
+        </main>
+      </section>
+    </div>
+
+    <script src="../../assets/js/owner-main.js"></script>
+  </body>
+</html>
