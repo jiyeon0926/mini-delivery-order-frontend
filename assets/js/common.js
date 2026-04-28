@@ -66,3 +66,8 @@ $("#deleteAccountBtn").on("click", function () {
 function formatTime(time) {
   return time.slice(0, 5);
 }
+
+// 2026-04-28T15:43:28 → 2026-04-28 15:43:28
+function formatDateTime(datetime) {
+  return datetime.replace("T", " ");
+}
