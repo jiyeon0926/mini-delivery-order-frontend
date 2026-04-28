@@ -36,3 +36,7 @@ body {
 .my-reviews .card .content {
   white-space: pre-wrap;
 }
+
+.store-reviews .card .content {
+  white-space: pre-wrap;
+}

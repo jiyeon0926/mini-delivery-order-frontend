@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="" />
     <meta name="generator" content="Astro v5.13.2" />
-    <title>리뷰내역</title>
+    <title>리뷰</title>
     <link
       rel="canonical"
       href="https://getbootstrap.com/docs/5.3/examples/navbars/"
@@ -95,9 +95,9 @@
     </nav>
     <main>
       <div class="container py-5">
-        <!-- 내 리뷰 목록 -->
-        <h3 class="text-center mb-5 fw-bold">리뷰내역</h3>
-        <div class="w-100 my-reviews" id="myReviewList"></div>
+        <!-- 가게 리뷰 목록 -->
+        <h3 class="text-center mb-5 fw-bold">리뷰</h3>
+        <div class="w-100 store-reviews" id="reviewList"></div>
       </div>
     </main>
     <footer class="pt-3 pb-4 text-body-secondary text-center text-small">
@@ -111,8 +111,26 @@
     <script src="/assets/js/common.js"></script>
     <script>
       function renderReviews(data) {
-        const myReviewListHtml = data
+        if (data.length === 0) {
+          $("#reviewList").html(
+            "<p class='text-center'>아직 작성된 리뷰가 없어요. 첫 리뷰를 남겨보세요!</p>",
+          );
+
+          return;
+        }
+
+        const reviewListHtml = data
           .map((r) => {
+            if (r.deleted) {
+              return `
+                <div class="card mb-4">
+                  <div class="card-body text-center text-muted">
+                    <p class="mb-0">삭제된 리뷰입니다.</p>
+                  </div>
+                </div>
+              `;
+            }
+
             const stars = "★".repeat(r.rating);
 
             return `
@@ -120,15 +138,11 @@
                     <div class="card-body">
                         <div class="d-flex w-100 justify-content-between py-2">
                             <div class="d-flex flex-column">
-                                <a
-                                    href="/pages/customer/store-detail.html?storeId=${r.storeId}"
-                                    class="text-decoration-none text-dark"
-                                    ><p class="mb-1 fw-bold">${r.storeName}</p></a
-                                >
+                                <p class="mb-1 fw-bold">${r.nickname}</p>
                                 <p class="small text-warning mb-3">${stars}</p>
                                 <p class="mb-1 fw-bold content">${r.content}</p>
                             </div>
-                            <div class="text-end small fw-semibold">${formatDateTime(r.createdAt)}</div>
+                            <div class="text-end small fw-semibold">${formatDate(r.createdAt)}</div>
                         </div>
                     </div>
                 </div>
@@ -136,17 +150,20 @@
           })
           .join("");
 
-        $("#myReviewList").html(myReviewListHtml);
+        $("#reviewList").html(reviewListHtml);
       }
 
       function loadReviews() {
-        myReviewsAPI()
+        const params = new URLSearchParams(window.location.search);
+        const storeId = params.get("storeId");
+
+        storeReviewsAPI(storeId)
           .done(function (response) {
             renderReviews(response.data);
           })
           .fail(function () {
-            $("#myReviewList").html(
-              "<p class='text-center'>작성한 리뷰가 없습니다.</p>",
+            $("#reviewList").html(
+              "<p class='text-center'>아직 작성된 리뷰가 없어요. 첫 리뷰를 남겨보세요!</p>",
             );
           });
       }
