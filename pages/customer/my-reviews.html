@@ -111,6 +111,14 @@
     <script src="/assets/js/common.js"></script>
     <script>
       function renderReviews(data) {
+        if (data.length === 0) {
+          $("#myReviewList").html(
+            "<p class='text-center'>작성한 리뷰가 없습니다.</p>",
+          );
+
+          return;
+        }
+
         const myReviewListHtml = data
           .map((r) => {
             const stars = "★".repeat(r.rating);
