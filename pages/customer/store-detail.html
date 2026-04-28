@@ -95,7 +95,7 @@
     </nav>
     <main>
       <div class="container py-5">
-        <div class="card mx-auto" style="max-width: 680px">
+        <div class="card mx-auto ps-2 pe-2 py-2" style="max-width: 750px">
           <div class="card-body" id="storeDetail">
             <div class="d-flex justify-content-between">
               <div class="d-flex flex-column">
@@ -131,7 +131,7 @@
         <div
           class="list-group mx-auto py-5"
           id="menuList"
-          style="max-width: 680px"
+          style="max-width: 750px"
         ></div>
       </div>
     </main>
@@ -152,14 +152,14 @@
             (m) =>
               `
                 <div class="list-group-item d-flex gap-3 py-3">
-                    <i class="bi bi-menu-button-wide fs-5"></i>
+                    <i class="bi bi-menu-button-wide fs-5 ps-2"></i>
                     <div class="d-flex w-100 justify-content-between">
                         <div class="d-flex flex-column">
                             <p class="mb-1 fw-bold">${m.menuName}</p>
-                            <p class="mb-1 text-muted small">${m.price}원</p>
+                            <p class="mb-1 text-muted small">${m.price.toLocaleString()}원</p>
                         </div>
                         <button
-                            class="text-dark fs-2 fw-bold add-cart-item ${token ? "" : "d-none"}"
+                            class="pe-3 text-dark fs-2 fw-bold add-cart-item ${token ? "" : "d-none"}"
                             data-menu-id="${m.menuId}"
                             style="background: none; border: none"
                         >
@@ -192,7 +192,7 @@
             $("#storeName").text(storeName);
             $("#averageRating").text(`★ ${averageRating}`);
             $("#reviewCount").text(`(${reviewCount})`);
-            $("#minOrderAmount").text(minOrderAmount);
+            $("#minOrderAmount").text(minOrderAmount.toLocaleString());
             $("#address").text(address);
             $("#openTime").text(formatTime(openTime));
             $("#closeTime").text(formatTime(closeTime));
