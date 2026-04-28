@@ -57,8 +57,12 @@ $("#deleteAccountBtn").on("click", function () {
       localStorage.clear();
       window.location.href = "/index.html";
     })
-    .fail(function () {
-      alert("회원탈퇴를 실패하였습니다.");
+    .fail(function (xhr) {
+      const msg =
+      xhr?.responseJSON?.message ||
+      xhr?.responseText ||
+      "회원탈퇴를 실패하였습니다.";
+      alert(msg);
     });
 });
 

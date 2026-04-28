@@ -1,3 +1,4 @@
+
 const state = {
     stores: [
       { id: 1, name: "홍대점", storeStatus: "CLOSED" },
@@ -8,7 +9,7 @@ const state = {
     selectedStoreId: 2,
   };
   
-  const $ = (sel) => document.querySelector(sel);
+  const qs = (sel) => document.querySelector(sel);  
   
   function escapeHtml(str) {
     return String(str)
@@ -24,7 +25,7 @@ const state = {
   }
   
   function renderStoreList() {
-    const root = $("#storeList");
+    const root = qs("#storeList");
     root.innerHTML = state.stores
       .map((s) => {
         const open = s.storeStatus === "OPEN";
@@ -41,13 +42,13 @@ const state = {
   }
   
   function renderCounts() {
-    $("#countPending").textContent = String(state.counts.PENDING ?? 0);
-    $("#countCooking").textContent = String(state.counts.COOKING ?? 0);
-    $("#countDelivering").textContent = String(state.counts.DELIVERING ?? 0);
+    qs("#countPending").textContent = String(state.counts.PENDING ?? 0);
+    qs("#countCooking").textContent = String(state.counts.COOKING ?? 0);
+    qs("#countDelivering").textContent = String(state.counts.DELIVERING ?? 0);
   }
   
   function renderStatusList() {
-    const root = $("#statusList");
+    const root = qs("#statusList");
     root.innerHTML = state.stores
       .map((s) => {
         const checked = s.storeStatus === "OPEN" ? "checked" : "";
@@ -80,7 +81,7 @@ const state = {
   }
   
   function bindEvents() {
-    $("#statusList").addEventListener("change", (e) => {
+    qs("#statusList").addEventListener("change", (e) => {
       const input = e.target;
       if (!input.classList.contains("store-toggle")) return;
   
@@ -94,7 +95,7 @@ const state = {
       // fetch(`/api/owner/stores/${storeId}/status`, { method:"PATCH", headers:{...}, body: JSON.stringify({storeStatus: nextStatus}) })
     });
   
-    $("#storeList").addEventListener("click", (e) => {
+    qs("#storeList").addEventListener("click", (e) => {
       const item = e.target.closest(".store-item");
       if (!item) return;
       state.selectedStoreId = Number(item.dataset.storeId);
