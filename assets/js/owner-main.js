@@ -3,7 +3,6 @@ const state = {
       { id: 1, name: "홍대점", storeStatus: "CLOSED" },
       { id: 2, name: "부평점", storeStatus: "OPEN" },
       { id: 3, name: "강남점", storeStatus: "CLOSED" },
-      { id: 4, name: "점", storeStatus: "OPEN" },
     ],
     counts: { PENDING: 45, COOKING: 52, DELIVERING: 55 },
     selectedStoreId: 2,
@@ -103,7 +102,42 @@ const state = {
     });
   }
   
+  function openDrawer() {
+    document.body.classList.add("drawer-open");
+    const backdrop = document.querySelector("#drawerBackdrop");
+    const drawer = document.querySelector("#drawer");
+    if (backdrop) backdrop.hidden = false;
+    if (drawer) drawer.setAttribute("aria-hidden", "false");
+  }
+  
+  function closeDrawer() {
+    document.body.classList.remove("drawer-open");
+    const backdrop = document.querySelector("#drawerBackdrop");
+    const drawer = document.querySelector("#drawer");
+    if (drawer) drawer.setAttribute("aria-hidden", "true");
+    // 트랜지션 끝난 뒤 숨김 처리(클릭 막기)
+    if (backdrop) {
+      setTimeout(() => (backdrop.hidden = true), 180);
+    }
+  }
+  
+  function bindDrawerEvents() {
+    const openBtn = document.querySelector("#drawerOpenBtn");
+    const closeBtn = document.querySelector("#drawerCloseBtn");
+    const backdrop = document.querySelector("#drawerBackdrop");
+  
+    openBtn?.addEventListener("click", openDrawer);
+    closeBtn?.addEventListener("click", closeDrawer);
+    backdrop?.addEventListener("click", closeDrawer);
+  
+    // ESC로 닫기
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeDrawer();
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     renderAll();
     bindEvents();
+    bindDrawerEvents();
   });
