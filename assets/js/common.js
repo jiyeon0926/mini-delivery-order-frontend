@@ -71,3 +71,8 @@ function formatTime(time) {
 function formatDateTime(datetime) {
   return datetime.replace("T", " ");
 }
+
+// 2026-04-28T15:43:28 → 2026-04-28
+function formatDate(datetime) {
+  return datetime.slice(0, 10);
+}
