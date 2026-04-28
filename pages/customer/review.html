@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="" />
     <meta name="generator" content="Astro v5.13.2" />
-    <title>리뷰내역</title>
+    <title>리뷰 작성</title>
     <link
       rel="canonical"
       href="https://getbootstrap.com/docs/5.3/examples/navbars/"
@@ -18,6 +18,12 @@
     <script src="/assets/js/color-modes.js"></script>
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/assets/css/common.css" rel="stylesheet" />
+    <style>
+      .no-hover:hover {
+        background-color: transparent !important;
+        color: inherit !important;
+      }
+    </style>
   </head>
   <body class="bg-body-tertiary">
     <nav class="navbar navbar-dark bg-dark">
@@ -95,9 +101,40 @@
     </nav>
     <main>
       <div class="container py-5">
-        <!-- 내 리뷰 목록 -->
-        <h3 class="text-center mb-5 fw-bold">리뷰내역</h3>
-        <div class="w-100 my-reviews" id="myReviewList"></div>
+        <div class="text-center mb-5">
+          <p class="fw-semibold">주문하신 메뉴는 어떠셨나요?</p>
+          <div id="rating" class="fs-1 text-warning">
+            <i class="bi bi-star" data-value="1"></i>
+            <i class="bi bi-star" data-value="2"></i>
+            <i class="bi bi-star" data-value="3"></i>
+            <i class="bi bi-star" data-value="4"></i>
+            <i class="bi bi-star" data-value="5"></i>
+          </div>
+        </div>
+        <div class="mx-auto" style="max-width: 600px">
+          <textarea
+            class="form-control"
+            rows="5"
+            placeholder="솔직한 후기를 남겨주세요."
+            maxlength="200"
+            id="content"
+          ></textarea>
+          <p class="text-end text-muted small mt-1">
+            <span id="charCount">0</span> / 200
+          </p>
+          <div class="d-flex justify-content-end gap-3">
+            <button
+              type="button"
+              class="btn btn-outline-secondary text-dark no-hover"
+              id="cancelBtn"
+            >
+              취소
+            </button>
+            <button type="button" class="btn btn-dark" id="submitBtn">
+              등록
+            </button>
+          </div>
+        </div>
       </div>
     </main>
     <footer class="pt-3 pb-4 text-body-secondary text-center text-small">
@@ -110,58 +147,65 @@
     <script src="/assets/js/api.js"></script>
     <script src="/assets/js/common.js"></script>
     <script>
-      function renderReviews(data) {
-        if (data.length === 0) {
-          $("#myReviewList").html(
-            "<p class='text-center'>작성한 리뷰가 없습니다.</p>",
-          );
+      let stars = 0;
 
-          return;
-        }
+      function paintStars(value) {
+        $("#rating i").each(function () {
+          const starValue = $(this).data("value");
 
-        const myReviewListHtml = data
-          .map((r) => {
-            const stars = "★".repeat(r.rating);
-
-            return `
-                <div class="card mb-4 ps-2 pe-2">
-                    <div class="card-body">
-                        <div class="d-flex w-100 justify-content-between py-2">
-                            <div class="d-flex flex-column">
-                                <a
-                                    href="/pages/customer/store-detail.html?storeId=${r.storeId}"
-                                    class="text-decoration-none text-dark"
-                                    ><p class="mb-1 fw-bold">${r.storeName}</p></a
-                                >
-                                <p class="small text-warning mb-3">${stars}</p>
-                                <p class="mb-1 content">${r.content}</p>
-                            </div>
-                            <div class="text-end small fw-semibold">${formatDateTime(r.createdAt)}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-          })
-          .join("");
-
-        $("#myReviewList").html(myReviewListHtml);
-      }
-
-      function loadReviews() {
-        myReviewsAPI()
-          .done(function (response) {
-            renderReviews(response.data);
-          })
-          .fail(function () {
-            $("#myReviewList").html(
-              "<p class='text-center'>작성한 리뷰가 없습니다.</p>",
-            );
-          });
+          // value보다 작거나 같으면 별을 채움
+          $(this)
+            .toggleClass("bi-star-fill", starValue <= value)
+            .toggleClass("bi-star", starValue > value);
+        });
       }
 
       $(document).ready(function () {
         updateCustomerAuthUI();
-        loadReviews();
+      });
+
+      // 마우스 올렸을 때 별점 표시 (임시)
+      $("#rating i").on("mouseenter", function () {
+        const hoverValue = $(this).data("value");
+        paintStars(hoverValue);
+      });
+
+      // 별점 확정
+      $("#rating i").on("click", function () {
+        stars = $(this).data("value");
+      });
+
+      $("#content").on("input", function () {
+        $("#charCount").text($(this).val().length);
+      });
+
+      $("#submitBtn").on("click", function () {
+        if (stars === 0) {
+          alert("별점을 선택해주세요.");
+
+          return;
+        }
+
+        const content = $("#content").val();
+        const data = {
+          rating: stars,
+          content: content === null ? " " : content,
+        };
+
+        const params = new URLSearchParams(window.location.search);
+        const orderId = params.get("orderId");
+        createReviewAPI(orderId, data)
+          .done(function () {
+            alert("리뷰를 작성하였습니다.");
+            window.location.href = "/pages/customer/order-list.html";
+          })
+          .fail(function () {
+            alert("리뷰 작성을 실패하였습니다.");
+          });
+      });
+
+      $("#cancelBtn").on("click", function () {
+        window.location.href = "/pages/customer/order-list.html";
       });
     </script>
   </body>
