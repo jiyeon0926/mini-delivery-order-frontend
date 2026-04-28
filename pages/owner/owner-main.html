@@ -15,16 +15,6 @@
 
         <nav class="side">
           <div class="side-section">
-            <div class="side-title">메뉴</div>
-
-            <a class="side-item active" href="#" aria-current="page">
-              <span>대시보드</span>
-            </a>
-
-            <a class="side-item" href="#" id="goMyStores">
-              <span>내 가게</span>
-            </a>
-          </div>
 
           <div class="side-section">
             <div class="store-list" id="storeList"></div>
@@ -38,10 +28,7 @@
           <div class="topbar-title">사장 대시보드</div>
 
           <div class="topbar-actions">
-            <button class="icon-btn" type="button" aria-label="프로필">
-              <span class="icon">👤</span>
-            </button>
-            <button class="icon-btn" type="button" aria-label="메뉴">
+            <button class="icon-btn" type="button" aria-label="메뉴" id="drawerOpenBtn">
               <span class="icon">≡</span>
             </button>
           </div>
@@ -102,6 +89,33 @@
       </section>
     </div>
 
+<!-- Drawer Backdrop -->
+<div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+
+<!-- Drawer -->
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-header">
+    <div class="drawer-user">
+      <div class="drawer-avatar" aria-hidden="true"></div>
+      <div class="drawer-userinfo">
+        <div class="drawer-nickname" id="drawerNickname">닉네임</div>
+        <div class="drawer-email" id="drawerEmail">user@naver.com</div>
+      </div>
+    </div>
+
+    <button class="drawer-close" type="button" aria-label="닫기" id="drawerCloseBtn">
+      ✕
+    </button>
+  </div>
+
+  <nav class="drawer-menu">
+    <a class="drawer-item" href="/pages/user/password.html">비밀 번호 변경</a>
+    <button class="drawer-item danger" type="button" id="logoutBtn">로그 아웃</button>
+    <a class="drawer-item" href="/pages/owner/owner-stores.html">내 가게</a>
+  </nav>
+</aside>
+
     <script src="../../assets/js/owner-main.js"></script>
+
   </body>
 </html>
