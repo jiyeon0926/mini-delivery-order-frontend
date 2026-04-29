@@ -464,3 +464,757 @@ body.drawer-open .drawer{
   text-align: left;     /* 왼쪽 정렬 */
   font-weight: 950;
 }
+/* owner-hongdae layout helpers */
+.owner-hongdae-grid {
+  grid-template-columns: 1fr;
+}
+
+.owner-hongdae-top-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.owner-hongdae-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.owner-hongdae-quick-menu {
+  margin-top: 22px;
+}
+
+/* quick menu */
+.quick-menu-card {
+  background: #fff;
+  border: 1px solid var(--card-line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.quick-menu-head {
+  padding: 16px 18px;
+  font-size: 24px;
+  font-weight: 900;
+  border-bottom: 1px solid var(--card-line);
+}
+
+.quick-menu-row {
+  display: grid;
+  grid-template-columns: 1fr 180px 200px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--card-line);
+}
+
+.quick-menu-row:last-child {
+  border-bottom: 0;
+}
+
+.menu-name {
+  font-size: 36px;
+  font-weight: 900;
+}
+
+.menu-price {
+  text-align: right;
+  font-size: 38px;
+  font-weight: 900;
+}
+
+.menu-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.pill-btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  background: #6b7280;
+  cursor: pointer;
+}
+
+.plus-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 72px;
+  font-size: 56px;
+  font-weight: 900;
+  color: #222;
+}
+
+@media (max-width: 1200px) {
+  .owner-hongdae-top-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-menu-row {
+    grid-template-columns: 1fr 130px 160px;
+  }
+
+  .menu-name { font-size: 24px; }
+  .menu-price { font-size: 26px; }
+  .pill-btn { font-size: 16px; }
+}
+
+/* owner-store-manage page */
+.owner-manage-side .side-item {
+  justify-content: center;
+  border-top: 1px solid var(--sidebar-line);
+}
+.owner-manage-side .side-item:last-child {
+  border-bottom: 1px solid var(--sidebar-line);
+}
+
+.topbar-back-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 800;
+  margin-right: 24px;
+}
+.topbar-back-link:hover {
+  text-decoration: underline;
+}
+
+.owner-manage-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 22px;
+  align-items: start;
+}
+
+.owner-form-card {
+  min-height: 420px;
+}
+.owner-form-title {
+  font-size: 44px;
+  margin-bottom: 18px;
+}
+
+.owner-form-rows {
+  display: grid;
+  gap: 18px;
+}
+.owner-form-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+.owner-form-label {
+  font-size: 38px;
+  font-weight: 900;
+}
+.owner-form-value {
+  font-size: 40px;
+  font-weight: 900;
+  color: #1f2937;
+}
+
+.owner-time-select {
+  width: 190px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #6b7280;
+  color: #fff;
+  font-size: 34px;
+  font-weight: 800;
+  padding: 6px 8px;
+}
+
+.owner-status-wrap {
+  display: grid;
+  gap: 22px;
+}
+
+.owner-action-row {
+  display: flex;
+  gap: 18px;
+}
+.owner-action-btn {
+  border: 0;
+  border-radius: 10px;
+  background: #6b7280;
+  color: #fff;
+  cursor: pointer;
+  font-size: 46px;
+  font-weight: 900;
+  padding: 10px 26px;
+}
+
+.owner-status-card {
+  min-height: 260px;
+}
+.owner-status-title {
+  font-size: 56px;
+  margin-bottom: 18px;
+}
+.owner-status-store {
+  font-size: 56px;
+  font-weight: 900;
+  margin-bottom: 20px;
+}
+.owner-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.owner-status-label {
+  font-size: 56px;
+  font-weight: 900;
+}
+
+.owner-status-card .switch {
+  width: 120px;
+  height: 64px;
+}
+.owner-status-card .switch input {
+  width: 120px;
+  height: 64px;
+  border-radius: 999px;
+  background: #dc2626;
+  border-color: #dc2626;
+}
+.owner-status-card .switch input::after {
+  top: 6px;
+  left: 6px;
+  width: 50px;
+  height: 50px;
+}
+.owner-status-card .switch input:checked {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+.owner-status-card .switch input:checked::after {
+  transform: translateX(56px);
+}
+
+@media (max-width: 1200px) {
+  .owner-manage-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .owner-form-title,
+  .owner-status-title {
+    font-size: 28px;
+  }
+
+  .owner-form-label,
+  .owner-form-value,
+  .owner-time-select,
+  .owner-status-store,
+  .owner-status-label,
+  .owner-action-btn {
+    font-size: 20px;
+  }
+
+  .owner-status-card .switch {
+    width: 72px;
+    height: 38px;
+  }
+  .owner-status-card .switch input {
+    width: 72px;
+    height: 38px;
+  }
+  .owner-status-card .switch input::after {
+    width: 28px;
+    height: 28px;
+    top: 4px;
+    left: 4px;
+  }
+  .owner-status-card .switch input:checked::after {
+    transform: translateX(32px);
+  }
+}
+
+/* owner-order-list page */
+.owner-order-page {
+  display: grid;
+  gap: 22px;
+}
+
+.owner-order-title {
+  font-size: 42px;
+  margin-bottom: 14px;
+}
+
+.owner-order-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.owner-order-chip {
+  background: #d1d5db;
+  border-radius: 6px;
+  padding: 14px 16px;
+  font-size: 42px;
+  font-weight: 900;
+}
+
+.owner-order-content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 22px;
+  align-items: start;
+}
+
+.owner-order-table-card,
+.owner-order-cancel-card {
+  padding: 14px;
+}
+
+.owner-order-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 22px;
+}
+
+.owner-order-table th,
+.owner-order-table td {
+  border: 1px solid #9ca3af;
+  padding: 8px 6px;
+  text-align: left;
+  vertical-align: middle;
+  word-break: break-word;
+}
+
+.owner-order-table thead th {
+  background: #d1d5db;
+  font-weight: 900;
+}
+
+.owner-order-status-select,
+.owner-order-id-select {
+  width: 100%;
+  border: 1px solid #9ca3af;
+  border-radius: 4px;
+  background: #6b7280;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  padding: 6px;
+}
+
+.owner-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 74px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 900;
+}
+.owner-status-badge.done { background: #22c55e; }
+.owner-status-badge.cooking { background: #eab308; }
+.owner-status-badge.delivering { background: #3b82f6; }
+.owner-status-badge.complete { background: #9ca3af; }
+
+.owner-order-cancel-form {
+  display: grid;
+  gap: 10px;
+}
+
+.owner-order-cancel-label {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.owner-order-cancel-textarea {
+  width: 100%;
+  min-height: 190px;
+  resize: none;
+  border: 1px solid #9ca3af;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 18px;
+}
+
+.owner-order-cancel-btn {
+  justify-self: end;
+  font-size: 24px;
+  padding: 8px 14px;
+}
+
+@media (max-width: 1200px) {
+  .owner-order-summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .owner-order-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .owner-order-title {
+    font-size: 28px;
+  }
+
+  .owner-order-chip {
+    font-size: 22px;
+  }
+
+  .owner-order-table {
+    font-size: 14px;
+  }
+}
+
+/* owner-review-manage page */
+.owner-review-page {
+  display: grid;
+  gap: 16px;
+}
+
+.owner-review-title {
+  font-size: 42px;
+  margin: 0;
+}
+
+.owner-review-count {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  background: #d1d5db;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 42px;
+  font-weight: 900;
+}
+
+.owner-review-list {
+  display: grid;
+  gap: 12px;
+}
+
+.owner-review-item {
+  background: #d1d5db;
+  border: 1px solid var(--card-line);
+  border-radius: 4px;
+  padding: 12px 14px;
+}
+
+.owner-review-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.owner-divider {
+  color: #6b7280;
+}
+
+.owner-review-date {
+  margin-left: auto;
+}
+
+.owner-review-stars {
+  margin-top: 8px;
+  color: #facc15;
+  font-size: 42px;
+  letter-spacing: 2px;
+  font-weight: 900;
+}
+
+.owner-review-body {
+  margin-top: 6px;
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.owner-review-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.owner-review-delete-btn {
+  border: 0;
+  border-radius: 8px;
+  background: #dc2626;
+  color: #fff;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 900;
+  padding: 8px 16px;
+}
+
+@media (max-width: 1200px) {
+  .owner-review-title {
+    font-size: 28px;
+  }
+
+  .owner-review-count {
+    font-size: 22px;
+  }
+
+  .owner-review-head {
+    font-size: 18px;
+  }
+
+  .owner-review-stars {
+    font-size: 24px;
+  }
+
+  .owner-review-body {
+    font-size: 18px;
+  }
+
+  .owner-review-delete-btn {
+    font-size: 14px;
+  }
+
+  .owner-review-date {
+    margin-left: 0;
+  }
+}
+
+/* owner-menu-manage page */
+.owner-menu-page {
+  display: grid;
+  gap: 18px;
+}
+
+.owner-menu-title {
+  font-size: 48px;
+  margin: 0;
+}
+
+.owner-menu-list {
+  display: grid;
+  gap: 18px;
+}
+
+.owner-menu-item {
+  border: 1px solid #9ca3af;
+  background: #fff;
+  padding: 18px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.owner-menu-info {
+  display: grid;
+  gap: 6px;
+}
+
+.owner-menu-name {
+  font-size: 46px;
+  font-weight: 900;
+}
+
+.owner-menu-price {
+  font-size: 36px;
+  font-weight: 800;
+}
+
+.owner-menu-actions {
+  display: grid;
+  gap: 10px;
+  min-width: 180px;
+}
+
+.owner-menu-edit-btn,
+.owner-menu-delete-btn {
+  border: 0;
+  border-radius: 8px;
+  background: #6b7280;
+  color: #fff;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 900;
+  padding: 8px 14px;
+}
+
+.owner-menu-delete-btn {
+  color: #ef4444;
+}
+
+.owner-menu-add-btn {
+  border: 0;
+  background: #d1d5db;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 40px;
+  font-weight: 900;
+  padding: 12px 16px;
+  text-align: center;
+}
+
+@media (max-width: 1200px) {
+  .owner-menu-title {
+    font-size: 30px;
+  }
+
+  .owner-menu-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .owner-menu-name {
+    font-size: 28px;
+  }
+
+  .owner-menu-price {
+    font-size: 22px;
+  }
+
+  .owner-menu-actions {
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .owner-menu-edit-btn,
+  .owner-menu-delete-btn {
+    font-size: 14px;
+  }
+
+  .owner-menu-add-btn {
+    font-size: 22px;
+  }
+}
+
+/* owner-stores page */
+.owner-stores-page {
+  display: grid;
+  gap: 16px;
+}
+
+.owner-stores-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.owner-stores-title {
+  font-size: 42px;
+  margin: 0;
+}
+
+.owner-stores-create-btn {
+  border: 0;
+  border-radius: 8px;
+  background: #6b7280;
+  color: #fff;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 900;
+  padding: 10px 16px;
+}
+
+.owner-stores-list {
+  display: grid;
+  gap: 12px;
+}
+
+.owner-store-item {
+  border: 1px solid #9ca3af;
+  background: #fff;
+  border-radius: 2px;
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px 16px;
+  align-items: center;
+}
+
+.owner-store-item.closed {
+  background: #f5d1d5;
+  border-color: #e9b8be;
+}
+
+.owner-store-main {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.owner-store-name {
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.owner-store-date {
+  font-size: 28px;
+  font-weight: 800;
+  color: #374151;
+}
+
+.owner-store-sub {
+  grid-column: 1 / 2;
+  font-size: 40px;
+  font-weight: 900;
+}
+
+.owner-store-status-btn {
+  grid-column: 2 / 3;
+  grid-row: 1 / span 2;
+  align-self: center;
+  border: 0;
+  border-radius: 10px;
+  background: #6b7280;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 900;
+  padding: 10px 18px;
+  cursor: pointer;
+}
+
+.owner-store-status-btn.open {
+  background: #4b5563;
+}
+
+.owner-stores-closed-title {
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 34px;
+  font-weight: 900;
+}
+
+@media (max-width: 1200px) {
+  .owner-stores-title {
+    font-size: 28px;
+  }
+
+  .owner-store-item {
+    grid-template-columns: 1fr;
+  }
+
+  .owner-store-status-btn {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: start;
+    font-size: 14px;
+  }
+
+  .owner-store-name {
+    font-size: 22px;
+  }
+
+  .owner-store-date {
+    font-size: 16px;
+  }
+
+  .owner-store-sub {
+    font-size: 20px;
+  }
+
+  .owner-stores-closed-title {
+    font-size: 22px;
+  }
+}
