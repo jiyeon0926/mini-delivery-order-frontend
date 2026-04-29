@@ -98,8 +98,19 @@ const state = {
     qs("#storeList").addEventListener("click", (e) => {
       const item = e.target.closest(".store-item");
       if (!item) return;
-      state.selectedStoreId = Number(item.dataset.storeId);
-      // 첫 이미지처럼 "선택 강조"까지 원하면, selectedStoreId 기반으로 active 클래스를 추가 렌더링하면 됨
+    
+      const storeId = Number(item.dataset.storeId);
+      state.selectedStoreId = storeId;
+    
+      // 점포별 상세 페이지 라우팅
+      const storePageMap = {
+        2: "/pages/owner/owner-bupyoung.html", // 부평점(지금 데이터상 id=2)
+      };
+    
+      const nextPage = storePageMap[storeId];
+      if (nextPage) {
+        window.location.href = nextPage;
+      }
     });
   }
   

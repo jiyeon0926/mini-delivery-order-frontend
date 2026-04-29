@@ -48,7 +48,7 @@ $("#logoutBtn").on("click", function () {
 // 회원탈퇴 버튼 클릭 시 동작
 $("#deleteAccountBtn").on("click", function () {
   const isOk = confirm("정말 탈퇴하시겠습니까?");
-  if (!isOk) {
+  if (!isOk) { 
     return;
   }
 
