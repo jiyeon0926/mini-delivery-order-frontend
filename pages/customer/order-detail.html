@@ -99,11 +99,17 @@
         <div class="py-2">
           <div class="card mb-4 ps-2 pe-2 mx-auto" style="max-width: 750px">
             <div class="card-body">
-              <p class="mb-3 fw-semibold pending d-none">주문 확인 중</p>
-              <p class="mb-3 fw-semibold cooking d-none">조리 중</p>
-              <p class="mb-3 fw-semibold delivering d-none">배달 중</p>
-              <p class="mb-3 fw-semibold delivered d-none">배달 완료</p>
-              <p class="mb-3 fw-semibold rejected d-none">주문 거절</p>
+              <p class="mb-3 fw-semibold pending d-none">주문이 접수되었어요</p>
+              <p class="mb-3 fw-semibold cooking d-none text-success">
+                음식을 준비하고 있어요
+              </p>
+              <p class="mb-3 fw-semibold delivering d-none text-primary">
+                배달이 시작됐어요
+              </p>
+              <p class="mb-3 fw-semibold delivered d-none">배달이 완료됐어요</p>
+              <p class="mb-3 fw-semibold rejected d-none text-danger">
+                주문이 취소됐어요
+              </p>
               <p class="mb-2 small d-flex">
                 <span class="fw-semibold" style="width: 80px">가게</span>
                 <span class="ps-3" id="storeName"></span>
@@ -124,7 +130,7 @@
           </div>
         </div>
         <!-- 거절 사유 -->
-        <div class="py-2 rejected d-none">
+        <div class="py-3 rejected d-none">
           <p class="mb-2 fw-bold ps-1">거절 사유</p>
           <div class="card mb-4 ps-2 pe-2 mx-auto" style="max-width: 750px">
             <div class="card-body">
@@ -133,13 +139,14 @@
           </div>
         </div>
         <!-- 주문 메뉴 -->
-        <div class="list-group mb-4 py-2" id="menuList">
+        <div class="py-3">
           <p class="mb-2 fw-bold ps-1">주문 메뉴</p>
+          <div class="list-group mb-2" id="menuList"></div>
         </div>
         <!-- 결제금액 -->
         <div class="card ps-2 pe-2">
           <div class="card-body">
-            <div class="d-flex w-100 justify-content-between py-2">
+            <div class="d-flex w-100 justify-content-between">
               <div class="d-flex flex-column">
                 <span class="fw-semibold">결제금액</span>
               </div>
