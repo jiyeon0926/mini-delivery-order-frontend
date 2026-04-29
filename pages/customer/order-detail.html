@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="generator" content="Astro v5.13.2" />
+    <title>주문상세</title>
+    <link
+      rel="canonical"
+      href="https://getbootstrap.com/docs/5.3/examples/navbars/"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <script src="/assets/js/color-modes.js"></script>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/css/common.css" rel="stylesheet" />
+  </head>
+  <body class="bg-body-tertiary">
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/index.html">Eat Now</a>
+        <div class="d-flex align-items-center gap-3 ms-auto">
+          <a
+            class="nav-link text-white cart-menu d-none"
+            href="/pages/customer/cart.html"
+            title="장바구니"
+          >
+            <i class="bi bi-cart fs-5"></i>
+          </a>
+          <a
+            class="nav-link text-white login-menu"
+            href="/pages/auth/login.html"
+            title="로그인"
+          >
+            <i class="bi bi-box-arrow-in-right fs-5"></i>
+          </a>
+          <button
+            class="nav-link btn btn-link text-white logout-menu d-none"
+            id="logoutBtn"
+            title="로그아웃"
+          >
+            <i class="bi bi-box-arrow-right fs-5"></i>
+          </button>
+          <!-- 햄버거 -->
+          <button
+            class="navbar-toggler d-none"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarMenu"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse mt-2" id="navbarMenu">
+          <ul class="navbar-nav me-auto mb-2">
+            <li class="nav-item">
+              <a
+                class="nav-link text-primary"
+                href="/pages/customer/order-list.html"
+                >주문내역</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link text-primary"
+                href="/pages/customer/my-reviews.html"
+                >리뷰내역</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/pages/user/nickname.html"
+                >닉네임 변경</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/pages/user/password.html"
+                >비밀번호 변경</a
+              >
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link btn btn-link text-start text-danger"
+                id="deleteAccountBtn"
+              >
+                회원탈퇴
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container py-5 mx-auto order-detail" style="max-width: 750px">
+        <!-- 주문 정보 -->
+        <div class="py-2">
+          <div class="card mb-4 ps-2 pe-2 mx-auto" style="max-width: 750px">
+            <div class="card-body">
+              <p class="mb-3 fw-semibold pending d-none">주문 확인 중</p>
+              <p class="mb-3 fw-semibold cooking d-none">조리 중</p>
+              <p class="mb-3 fw-semibold delivering d-none">배달 중</p>
+              <p class="mb-3 fw-semibold delivered d-none">배달 완료</p>
+              <p class="mb-3 fw-semibold rejected d-none">주문 거절</p>
+              <p class="mb-2 small d-flex">
+                <span class="fw-semibold" style="width: 80px">가게</span>
+                <span class="ps-3" id="storeName"></span>
+              </p>
+              <p class="mb-2 small d-flex">
+                <span class="fw-semibold" style="width: 80px">주문일시</span>
+                <span class="ps-3" id="createdAt"></span>
+              </p>
+              <p class="mb-2 small d-flex">
+                <span class="fw-semibold" style="width: 80px">주소</span>
+                <span class="ps-3" id="customerAddress"></span>
+              </p>
+              <p class="mb-0 small d-flex">
+                <span class="fw-semibold" style="width: 80px">주문번호</span>
+                <span class="ps-3" id="orderNumber"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- 거절 사유 -->
+        <div class="py-2 rejected d-none">
+          <p class="mb-2 fw-bold ps-1">거절 사유</p>
+          <div class="card mb-4 ps-2 pe-2 mx-auto" style="max-width: 750px">
+            <div class="card-body">
+              <span class="reject-reason" id="rejectionReason"></span>
+            </div>
+          </div>
+        </div>
+        <!-- 주문 메뉴 -->
+        <div class="list-group mb-4 py-2" id="menuList">
+          <p class="mb-2 fw-bold ps-1">주문 메뉴</p>
+        </div>
+        <!-- 결제금액 -->
+        <div class="card ps-2 pe-2">
+          <div class="card-body">
+            <div class="d-flex w-100 justify-content-between py-2">
+              <div class="d-flex flex-column">
+                <span class="fw-semibold">결제금액</span>
+              </div>
+              <span class="fw-bold pe-2" id="totalAmount"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="pt-3 pb-4 text-body-secondary text-center text-small">
+      <p class="mb-1">&copy; 2026 Eat Now</p>
+    </footer>
+    <script
+      src="/assets/js/bootstrap.bundle.min.js"
+      class="astro-vvvwv3sm"
+    ></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/common.js"></script>
+    <script>
+      function renderMenus(items) {
+        const menuListHtml = items
+          .map(
+            (i) =>
+              `
+                <div class="list-group-item d-flex gap-3 py-3">
+                  <div class="d-flex w-100 justify-content-between ps-2 pe-2">
+                    <div class="d-flex flex-column">
+                      <div class="mb-2 d-flex">
+                        <span class="mb-1" style="width: 100px">${i.menuName}</span>
+                        <span class="text-muted small"
+                        >${i.price.toLocaleString()}원</span
+                        >
+                      </div>
+                      <div class="d-flex">
+                        <span class="fw-semibold" style="width: 100px"
+                        >${i.totalPrice.toLocaleString()}원</span
+                        >
+                        <span class="text-muted small">${i.quantity}개</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            `,
+          )
+          .join("");
+
+        $("#menuList").html(menuListHtml);
+      }
+
+      function loadOrderDetail() {
+        const params = new URLSearchParams(window.location.search);
+        const orderId = params.get("orderId");
+
+        customerOrderDetailAPI(orderId).done(function (response) {
+          const storeName = response.data.storeName;
+          const createdAt = response.data.createdAt;
+          const customerAddress = response.data.customerAddress;
+          const orderNumber = response.data.orderNumber;
+          const rejectionReason = response.data.rejectionReason;
+          const totalAmount = response.data.totalAmount;
+
+          $("#storeName").text(storeName);
+          $("#createdAt").text(formatDateTime(createdAt));
+          $("#customerAddress").text(customerAddress);
+          $("#orderNumber").text(orderNumber);
+          $("#rejectionReason").text(rejectionReason);
+          $("#totalAmount").text(`${totalAmount.toLocaleString()}원`);
+
+          const orderStatus = response.data.orderStatus.toLowerCase();
+          $(`.${orderStatus}`).removeClass("d-none");
+
+          renderMenus(response.data.items);
+        });
+      }
+
+      $(document).ready(function () {
+        updateCustomerAuthUI();
+        loadOrderDetail();
+      });
+    </script>
+  </body>
+</html>
