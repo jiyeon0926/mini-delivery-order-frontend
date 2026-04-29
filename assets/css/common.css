@@ -4,7 +4,7 @@ body {
   height: 100%;
 }
 
-/* 회원가입 및 로그인 */
+/* 고객 */
 .form-auth {
   max-width: 330px;
   padding: 1rem;
@@ -32,11 +32,14 @@ body {
   border-top-right-radius: 0;
 }
 
-/* 리뷰 */
 .my-reviews .card .content {
   white-space: pre-wrap;
 }
 
 .store-reviews .card .content {
+  white-space: pre-wrap;
+}
+
+.order-detail .rejected .reject-reason {
   white-space: pre-wrap;
 }
