@@ -12,7 +12,7 @@
     <div class="layout">
       <aside class="sidebar">
         <div class="brand">Eat-Now</div>
-        <nav class="side">
+        <nav class="side owner-manage-side">
           <a class="side-item" href="/pages/owner/owner-main.html">대시보드</a>
           <a class="side-item" href="#">홍대점 영업 전</a>
           <a class="side-item active" href="#">부평점 영업 중</a>
@@ -34,9 +34,11 @@
           <div class="grid owner-hongdae-grid">
             <div class="owner-hongdae-top-cards">
               <section class="card">
-                <h2 class="card-title">가게 관리</h2>
-                <div class="owner-hongdae-actions">
-                  <button class="pill-btn">가게 수정</button>
+                <div style="display:flex; align-items:center; justify-content:space-between; margin:0 0 18px;">
+                  <h2 class="card-title" style="margin:0;">가게 관리 Quick Menu</h2>
+                </div>
+
+                <div class="owner-hongdae-actions" style="justify-content:center;">
                   <button class="pill-btn">가게 폐업</button>
                 </div>
               </section>
@@ -53,7 +55,18 @@
             </div>
 
             <section class="quick-menu-card owner-hongdae-quick-menu">
-              <div class="quick-menu-head">메뉴 관리 Quick Menu</div>
+              <div
+                class="quick-menu-head"
+                style="display:flex; align-items:center; justify-content:space-between; gap:12px;"
+              >
+                <span>메뉴 관리 Quick Menu</span>
+                <button
+                  class="pill-btn"
+                  style="padding:6px 10px; font-size:14px; border-radius:8px; white-space:nowrap;"
+                >
+                  메뉴 목록
+                </button>
+              </div>
 
               <div class="quick-menu-row">
                 <div class="menu-name">두바이 쫀득 쿠키</div>

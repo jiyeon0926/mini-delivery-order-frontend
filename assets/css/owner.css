@@ -38,6 +38,18 @@
     background:var(--sidebar);
     border-right:1px solid var(--sidebar-line);
   }
+
+  .store-block {
+    border-bottom: 1px solid var(--sidebar-line);
+  }
+  
+  .store-submenu[hidden] {
+    display: none !important;
+  }
+  
+  .store-submenu-nav .side-item {
+    justify-content: center;
+  }
   
   .brand{
     padding:22px 22px 18px;
@@ -62,6 +74,18 @@
     color:inherit;
     font-weight:750;
     position:relative;
+  }
+
+  /* sidebar header box (사장 대시보드) */
+  .side-dashboard-item{
+    width:100%;
+    justify-content:flex-start;
+    padding:14px 22px;
+    border-top:0;
+    border-bottom:0;
+    background:transparent; /* 홍대점/부평점이랑 같은 톤 */
+    font-weight:750;        /* .side-item 과 동일 */
+    font-size:23px;      /* 글씨 크기 동일 */
   }
   
   .side-item.active{
