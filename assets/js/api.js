@@ -191,3 +191,29 @@ function myReviewsAPI() {
     type: "GET",
   });
 }
+
+// 주문 수 조회 API
+function orderCountAPI() {
+  return $.ajax({
+    url: COMMON_URL + "/api/owner/orders/count",
+    type: "GET",
+  });
+}
+
+// 본인 가게 다건 조회 API
+function myStoresAPI() {
+  return $.ajax({
+    url: COMMON_URL + "/api/owner/stores",
+    type: "GET",
+  });
+}
+
+// 가게 영업 상태 변경 API
+function updateStoreStatusAPI(storeId, data) {
+  return $.ajax({
+    url: COMMON_URL + `/api/owner/stores/${storeId}/status`,
+    type: "PATCH",
+    contentType: "application/json",
+    data: JSON.stringify(data),
+  });
+}
