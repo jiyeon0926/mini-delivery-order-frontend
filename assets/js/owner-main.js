@@ -7,6 +7,7 @@ const state = {
     ],
     counts: { PENDING: 45, COOKING: 52, DELIVERING: 55 },
     selectedStoreId: 2,
+    expandedStoreId: null, // 펼친 지점 id (없으면 null)
   };
   
   const qs = (sel) => document.querySelector(sel);  
@@ -29,11 +30,28 @@ const state = {
     root.innerHTML = state.stores
       .map((s) => {
         const open = s.storeStatus === "OPEN";
+        const expanded = state.expandedStoreId === s.id;
+  
+        // TODO: 실제 경로/쿼리는 프로젝트에 맞게 수정
+        const q = `?storeId=${s.id}`;
+  
         return `
-          <div class="store-item" data-store-id="${s.id}">
-            <div class="store-name">${escapeHtml(s.name)}</div>
-            <div class="store-badge ${open ? "open" : ""}">
-              ${statusText(s.storeStatus)}
+          <div class="store-block" data-store-id="${s.id}">
+            <div class="store-item" data-role="store-header" data-store-id="${s.id}">
+              <div class="store-name">${escapeHtml(s.name)}</div>
+              <div class="store-badge ${open ? "open" : ""}">
+                ${statusText(s.storeStatus)}
+              </div>
+            </div>
+  
+            <div class="store-submenu" ${expanded ? "" : "hidden"}>
+              <nav class="side owner-manage-side store-submenu-nav">
+                <a class="side-item ${expanded ? "active" : ""}" href="/pages/owner/owner-main.html${q}">대시보드</a>
+                <a class="side-item" href="/pages/owner/owner-store-manage.html${q}">가게 관리</a>
+                <a class="side-item" href="/pages/owner/owner-order-list.html${q}">주문 목록</a>
+                <a class="side-item" href="/pages/owner/owner-review-manage.html${q}">리뷰 관리</a>
+                <a class="side-item" href="/pages/owner/owner-menu-manage.html${q}">메뉴 관리</a>
+              </nav>
             </div>
           </div>
         `;
@@ -96,21 +114,21 @@ const state = {
     });
   
     qs("#storeList").addEventListener("click", (e) => {
-      const item = e.target.closest(".store-item");
-      if (!item) return;
-    
-      const storeId = Number(item.dataset.storeId);
-      state.selectedStoreId = storeId;
-    
-      // 점포별 상세 페이지 라우팅
-      const storePageMap = {
-        2: "/pages/owner/owner-bupyoung.html", // 부평점(지금 데이터상 id=2)
-      };
-    
-      const nextPage = storePageMap[storeId];
-      if (nextPage) {
-        window.location.href = nextPage;
+      const link = e.target.closest("a");
+      if (link && link.closest(".store-submenu")) {
+        return; // 링크 클릭은 브라우저 기본 이동
       }
+    
+      const header = e.target.closest('[data-role="store-header"]');
+      if (!header) return;
+    
+      e.preventDefault();
+    
+      const storeId = Number(header.dataset.storeId);
+      state.selectedStoreId = storeId;
+      state.expandedStoreId = state.expandedStoreId === storeId ? null : storeId;
+    
+      renderStoreList(); // 서브메뉴 열림/닫힘 반영
     });
   }
   
