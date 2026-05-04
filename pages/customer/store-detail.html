@@ -18,6 +18,14 @@
     <script src="/assets/js/color-modes.js"></script>
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/assets/css/common.css" rel="stylesheet" />
+    <style>
+      /* 스피너 제거 */
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    </style>
   </head>
   <body class="bg-body-tertiary">
     <nav class="navbar navbar-dark bg-dark">
@@ -154,20 +162,25 @@
           .map(
             (m) =>
               `
-                <div class="list-group-item d-flex gap-3 py-3">
+                <div class="list-group-item d-flex align-items-center gap-3 py-3">
                     <i class="bi bi-menu-button-wide fs-5 ps-2"></i>
-                    <div class="d-flex w-100 justify-content-between">
-                        <div class="d-flex flex-column">
-                            <p class="mb-1 fw-bold">${m.menuName}</p>
-                            <p class="mb-1 text-muted small">${m.price.toLocaleString()}원</p>
-                        </div>
+                    <div class="flex-grow-1">
+                      <p class="mb-1 fw-bold">${m.menuName}</p>
+                      <p class="mb-1 text-muted small">${m.price.toLocaleString()}원</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 ${token ? "" : "d-none"}">
+                      <div class="d-flex align-items-center border rounded">
+                        <button class="btn btn-outline-secondary border-0 btn-minus" type="button" style="width: 32px">−</button>
+                        <span class="quantity text-center" style="width: 32px">1</span>
+                        <button class="btn btn-outline-secondary border-0 btn-plus" type="button" style="width: 32px">+</button>
+                      </div>
+                      <div class="ps-4 pe-2">
                         <button
-                            class="pe-3 text-dark fs-2 fw-bold add-cart-item ${token ? "" : "d-none"}"
-                            data-menu-id="${m.menuId}"
-                            style="background: none; border: none"
-                        >
-                            +
+                          class="btn btn-primary add-cart-item"
+                          data-menu-id="${m.menuId}"
+                          >담기
                         </button>
+                      </div>
                     </div>
                 </div>
             `,
@@ -224,12 +237,31 @@
         loadStoreDetail();
       });
 
-      $(document).on("click", ".add-cart-item", function () {
+      // siblings: 같은 부모를 가진 형제 요소를 찾음 → .btn-plus와 형제 요소인 .quantity를 반환
+      $("#menuList").on("click", ".btn-plus", function () {
+        const quantity = $(this).siblings(".quantity");
+
+        let value = parseInt(quantity.text());
+        quantity.text(value + 1);
+      });
+
+      $("#menuList").on("click", ".btn-minus", function () {
+        const quantity = $(this).siblings(".quantity");
+
+        let value = parseInt(quantity.text());
+        if (value > 1) {
+          quantity.text(value - 1);
+        }
+      });
+
+      $("#menuList").on("click", ".add-cart-item", function () {
         const menuId = $(this).data("menu-id");
+        const item = $(this).closest(".list-group-item");
+        const quantity = parseInt(item.find(".quantity").text());
 
         const data = {
           menuId: menuId,
-          quantity: 1,
+          quantity: quantity,
         };
 
         addCartItemAPI(data)
@@ -239,10 +271,6 @@
           .fail(function (xhr) {
             if (xhr.status === 400) {
               alert("현재 영업 중이 아닙니다.");
-            }
-
-            if (xhr.status === 409) {
-              alert("장바구니에서 수량을 변경해주세요.");
             }
           });
       });
