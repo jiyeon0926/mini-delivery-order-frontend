@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>부평점 리뷰 관리</title>
+    <link rel="stylesheet" href="../../assets/css/owner.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">Eat-Now</div>
+        <nav class="side owner-manage-side">
+          <a class="side-item" href="/pages/owner/owner-store-manage.html">가게 관리</a>
+          <a class="side-item" href="/pages/owner/owner-order-list.html">주문 목록</a>
+          <a class="side-item active" href="#">리뷰 관리</a>
+          <a class="side-item" href="#">메뉴 관리</a>
+        </nav>
+      </aside>
+
+      <section class="main">
+        <header class="topbar">
+          <a class="topbar-back-link" href="/pages/owner/owner-hongdae.html">부평점 리뷰 관리</a>
+          <div class="topbar-title">안녕하세요, Eat-Now 부평점 사장님!</div>
+          <div class="topbar-actions">
+            <button class="icon-btn" type="button" aria-label="메뉴">
+              <span class="icon">≡</span>
+            </button>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="owner-review-page">
+            <h2 class="card-title owner-review-title">리뷰 목록</h2>
+            <div class="owner-review-count">총 리뷰 수: 20건</div>
+
+            <section class="owner-review-list">
+              <article class="owner-review-item">
+                <div class="owner-review-head">
+                  <span>닉네임 : 냥콩야옹</span>
+                  <span class="owner-divider">|</span>
+                  <span>메뉴 : 두바이 쫀득 쿠키</span>
+                  <span class="owner-review-date">작성 일시: 2026.04.24</span>
+                </div>
+                <div class="owner-review-stars">★★★★★</div>
+                <div class="owner-review-body">맛있어요!</div>
+                <div class="owner-review-actions">
+                  <button class="owner-review-delete-btn">리뷰 삭제</button>
+                </div>
+              </article>
+
+              <article class="owner-review-item">
+                <div class="owner-review-head">
+                  <span>닉네임 : 냥콩야옹</span>
+                  <span class="owner-divider">|</span>
+                  <span>메뉴 : 두바이 쫀득 쿠키</span>
+                  <span class="owner-review-date">작성 일시: 2026.04.24</span>
+                </div>
+                <div class="owner-review-stars">★★★★★</div>
+                <div class="owner-review-body">맛있어요!</div>
+                <div class="owner-review-actions">
+                  <button class="owner-review-delete-btn">리뷰 삭제</button>
+                </div>
+              </article>
+            </section>
+          </div>
+        </main>
+      </section>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/common.js"></script>
+  </body>
+</html>

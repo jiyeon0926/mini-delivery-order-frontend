@@ -1,131 +1,223 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>사장 대시보드</title>
-    <link rel="stylesheet" href="../../assets/css/owner.css" />
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  </head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <script src="/assets/js/color-modes.js"></script>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/css/common.css" rel="stylesheet" />
+    <title>사장 메인</title>
 
-  <body>
-    <div class="layout">
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <div class="brand">Eat-Now</div>
+    <style>
+        /* 사이드바 */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: #f8f9fa;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
 
-        <nav class="side">
-          <a
-            class="side-item side-dashboard-item"
-            href="/pages/owner/owner-main.html"
-            aria-label="사장 대시보드"
-          >
-            대시보드
-          </a>
-          <div class="side-section">
+        /* 토글 버튼 */
+        .btn-toggle {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            font-weight: 600;
+            color: #333;
+            background: none;
+            border: none;
+            padding: 10px;
+        }
 
-          <div class="side-section">
-            <div class="store-list" id="storeList"></div>
-          </div>
-        </nav>
-      </aside>
+        .btn-toggle:hover {
+            background: #e9ecef;
+        }
 
-      <!-- Main -->
-      <section class="main">
-        <header class="topbar">
-          <div class="topbar-title">사장 대시보드</div>
+        /* 화살표 */
+        .btn-toggle::before {
+            content: "›";
+            margin-right: 10px;
+            transition: transform 0.2s;
+        }
 
-          <div class="topbar-actions">
-            <button class="icon-btn" type="button" aria-label="메뉴" id="drawerOpenBtn">
-              <span class="icon">≡</span>
-            </button>
-          </div>
-        </header>
+        .btn-toggle[aria-expanded="true"]::before {
+            transform: rotate(90deg);
+        }
 
-        <main class="content">
-          <div class="grid">
-            <!-- Orders -->
-            <section class="card orders">
-              <h2 class="card-title">오늘의 주문 (전체)</h2>
+        /* 내부 메뉴 */
+        .btn-toggle-nav a {
+            display: block;
+            padding: 6px 20px;
+            color: #555;
+            text-decoration: none;
+        }
 
-              <div class="orders-rows">
-                <div class="orders-row pending">
-                  <div class="left">
-                    <span class="dot" aria-hidden="true"></span>
-                    <span class="label">신규</span>
-                  </div>
-                  <div class="right">
-                    <strong id="countPending">0</strong>
-                    <span class="unit">건</span>
-                  </div>
+        .btn-toggle-nav a:hover {
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/pages/owner/owner-main.html">Eat Now</a>
+            <div class="d-flex align-items-center gap-3 ms-auto">
+                <!-- 햄버거 -->
+                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="navbarMenu"
+                aria-labelledby="navbarMenuLabel">
+                <div class="offcanvas-header">
+                    <div class="d-flex flex-column">
+                        <h5 class="offcanvas-title mb-0" id="navbarMenuLabel">닉네임</h5>
+                        <div class="small text-white-50">user@naver.com</div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
                 </div>
-
-                <div class="row-divider" aria-hidden="true"></div>
-
-                <div class="orders-row cooking">
-                  <div class="left">
-                    <span class="dot" aria-hidden="true"></span>
-                    <span class="label">조리 중</span>
-                  </div>
-                  <div class="right">
-                    <strong id="countCooking">0</strong>
-                    <span class="unit">건</span>
-                  </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/pages/user/nickname.html">닉네임 변경</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/pages/user/password.html">비밀번호 변경</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">내 가게</a>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link btn btn-link text-start text-danger" id="deleteAccountBtn">
+                                회원탈퇴
+                            </button>
+                        </li>
+                    </ul>
                 </div>
-
-                <div class="row-divider" aria-hidden="true"></div>
-
-                <div class="orders-row delivering">
-                  <div class="left">
-                    <span class="dot" aria-hidden="true"></span>
-                    <span class="label">배달 중</span>
-                  </div>
-                  <div class="right">
-                    <strong id="countDelivering">0</strong>
-                    <span class="unit">건</span>
-                  </div>
+            </div>
+        </div>
+    </nav>
+    <div class="d-flex">
+        <!-- 사이드 바 -->
+        <div class="sidebar">
+            <h5 class="fw-bold mb-3">Collapsible</h5>
+            <ul class="list-unstyled store-side">
+            </ul>
+        </div>
+        <main class="flex-grow-1 ps-5 py-5">
+            <div class="d-flex">
+                <!-- 오늘의 주문 -->
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">오늘의 주문(전체)</h5>
+                        <p class="card-text">접수: <span id="pending"></span>건</p>
+                        <p class="card-text">조리 중: <span id="cooking"></span>건</p>
+                        <p class="card-text">배달 중: <span id="delivering"></span>건</p>
+                    </div>
                 </div>
-              </div>
-            </section>
-
-            <!-- Status -->
-            <section class="status-col">
-              <div class="status-card" id="statusList"></div>
-            </section>
-          </div>
+                <!-- 가게별 영업 상태 -->
+                <ul class="list-group py-5" id="storeList">
+                </ul>
+            </div>
         </main>
-      </section>
     </div>
 
-<!-- Drawer Backdrop -->
-<div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
-
-<!-- Drawer -->
-<aside class="drawer" id="drawer" aria-hidden="true">
-  <div class="drawer-header">
-    <div class="drawer-user">
-      <div class="drawer-avatar" aria-hidden="true"></div>
-      <div class="drawer-userinfo">
-        <div class="drawer-nickname" id="drawerNickname">닉네임</div>
-        <div class="drawer-email" id="drawerEmail">user@naver.com</div>
-      </div>
-    </div>
-
-    <button class="drawer-close" type="button" aria-label="닫기" id="drawerCloseBtn">
-      ✕
-    </button>
-  </div>
-
-  <nav class="drawer-menu">
-    <a class="drawer-item" href="/pages/user/password.html">비밀번호 변경</a>
-    <button class="drawer-item danger" type="button" id="logoutBtn">로그아웃</button>
-    <a class="drawer-item" href="/pages/owner/owner-stores.html">내 가게</a>
-  </nav>
-  <button class="drawer-withdraw" type="button" id="deleteAccountBtn">회원탈퇴</button></aside>
-
+    <script src="/assets/js/bootstrap.bundle.min.js" class="astro-vvvwv3sm"></script>
     <script src="/assets/js/api.js"></script>
     <script src="/assets/js/common.js"></script>
-    <script src="../../assets/js/owner-main.js"></script>
-  </body>
-  
+    <script>
+        function loadOrderCount() {
+            orderCountAPI().done(function (response) {
+                const pending = response.data.count.pending;
+                const cooking = response.data.count.cooking;
+                const delivering = response.data.count.delivering;
+
+                $("#pending").text(pending);
+                $("#cooking").text(cooking);
+                $("#delivering").text(delivering);
+            });
+        }
+
+        function renderStoreSide(data) {
+            const sideHtml = data
+                .map(
+                    (d) => `
+                    <li>
+                    <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#home" aria-expanded="true">
+                        ${d.name}
+                    </button>
+                    <div class="collapse show" id="home">
+                        <ul class="btn-toggle-nav list-unstyled small">
+                            <li><a href="#">대시보드</a></li>
+                            <li><a href="#">가게 관리</a></li>
+                            <li><a href="#">주문 목록</a></li>
+                            <li><a href="#">리뷰 관리</a></li>
+                            <li><a href="#">메뉴 관리</a></li>
+
+                        </ul>
+                    </div>
+                </li>
+                `,
+                )
+                .join("");
+
+            $(".store-side").html(sideHtml);
+        }
+
+        function renderStores(data) {
+            const storeListHtml = data
+                .filter(d => d.deleted === false)
+                .map((d) => `
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">${d.name}</div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" data-store-id="${d.id}"
+                            ${d.storeStatus === "OPEN" ? "checked" : ""}/>
+                        </div>
+                    </li>
+            `).join("")
+
+            $("#storeList").html(storeListHtml);
+        }
+
+        function loadStores() {
+            myStoresAPI().done(function (response) {
+                const data = response.data;
+
+                renderStoreSide(data);
+                renderStores(data);
+            });
+        }
+
+        $(document).ready(function () {
+            loadOrderCount();
+            loadStores();
+        });
+
+        $("#storeList").on("change", ".form-check-input", function () {
+            const storeId = $(this).data("store-id");
+            const isChecked = $(this).is(":checked");
+            const storeStatus = isChecked ? "OPEN" : "CLOSE";
+
+            updateStoreStatusAPI(storeId, { storeStatus }).fail(function () {
+                alert("영업 상태를 변경할 수 없습니다.");
+                loadStores();
+            });
+        });
+    </script>
+</body>
+
 </html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>부평점 대시보드</title>
+    <link rel="stylesheet" href="../../assets/css/owner.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">Eat-Now</div>
+        <nav class="side owner-manage-side">
+          <a class="side-item" href="/pages/owner/owner-main.html">대시보드</a>
+          <a class="side-item" href="#">홍대점 영업 전</a>
+          <a class="side-item active" href="#">부평점 영업 중</a>
+          <a class="side-item" href="#">강남점 영업 전</a>
+        </nav>
+      </aside>
+
+      <section class="main">
+        <header class="topbar">
+          <div class="topbar-title">안녕하세요, Eat-Now 부평점 사장님!</div>
+          <div class="topbar-actions">
+            <button class="icon-btn" type="button" aria-label="메뉴">
+              <span class="icon">≡</span>
+            </button>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="grid owner-hongdae-grid">
+            <div class="owner-hongdae-top-cards">
+              <section class="card">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin:0 0 18px;">
+                  <h2 class="card-title" style="margin:0;">가게 관리 Quick Menu</h2>
+                </div>
+
+                <div class="owner-hongdae-actions" style="justify-content:center;">
+                  <button class="pill-btn">가게 폐업</button>
+                </div>
+              </section>
+
+              <section class="card">
+                <h2 class="card-title">주문 관리</h2>
+                <button class="pill-btn">주문 목록</button>
+              </section>
+
+              <section class="card">
+                <h2 class="card-title">리뷰 관리</h2>
+                <button class="pill-btn">리뷰 목록</button>
+              </section>
+            </div>
+
+            <section class="quick-menu-card owner-hongdae-quick-menu">
+              <div
+                class="quick-menu-head"
+                style="display:flex; align-items:center; justify-content:space-between; gap:12px;"
+              >
+                <span>메뉴 관리 Quick Menu</span>
+                <button
+                  class="pill-btn"
+                  style="padding:6px 10px; font-size:14px; border-radius:8px; white-space:nowrap;"
+                >
+                  메뉴 목록
+                </button>
+              </div>
+
+              <div class="quick-menu-row">
+                <div class="menu-name">두바이 쫀득 쿠키</div>
+                <div class="menu-price">5,000원</div>
+                <div class="menu-actions">
+                  <button class="pill-btn">메뉴 수정</button>
+                  <button class="pill-btn">메뉴 삭제</button>
+                </div>
+              </div>
+
+              <div class="quick-menu-row">
+                <div class="menu-name">아메리카노</div>
+                <div class="menu-price">3,000원</div>
+                <div class="menu-actions">
+                  <button class="pill-btn">메뉴 수정</button>
+                  <button class="pill-btn">메뉴 삭제</button>
+                </div>
+              </div>
+
+              <div class="plus-row">+</div>
+            </section>
+          </div>
+        </main>
+      </section>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/common.js"></script>
+  </body>
+</html>
