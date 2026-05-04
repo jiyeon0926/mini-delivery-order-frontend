@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>내 가게</title>
+    <link rel="stylesheet" href="../../assets/css/owner.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">Eat-Now</div>
+        <nav class="side">
+          <a class="side-item" href="/pages/owner/owner-main.html">대시보드</a>
+          <a class="side-item" href="#">홍대점 영업 전</a>
+          <a class="side-item active" href="#">부평점 영업 전</a>
+          <a class="side-item" href="#">강남점 영업 전</a>
+        </nav>
+      </aside>
+
+      <section class="main">
+        <header class="topbar">
+          <div class="topbar-title">안녕하세요, Eat-Now 사장님!</div>
+          <div class="topbar-actions">
+            <button class="icon-btn" type="button" aria-label="메뉴">
+              <span class="icon">≡</span>
+            </button>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="owner-stores-page">
+            <div class="owner-stores-top">
+              <h2 class="card-title owner-stores-title">내 가게</h2>
+              <button class="owner-stores-create-btn">가게 생성하기</button>
+            </div>
+
+            <section class="owner-stores-list">
+              <article class="owner-store-item">
+                <div class="owner-store-main">
+                  <div class="owner-store-name">홍대점</div>
+                  <div class="owner-store-date">2026.04.10</div>
+                </div>
+                <div class="owner-store-sub">⭐ 4.2(1,200)</div>
+                <button class="owner-store-status-btn">영업 전</button>
+              </article>
+
+              <article class="owner-store-item">
+                <div class="owner-store-main">
+                  <div class="owner-store-name">부평점</div>
+                  <div class="owner-store-date">2026.04.10</div>
+                </div>
+                <div class="owner-store-sub">⭐ 4.2(1,200)</div>
+                <button class="owner-store-status-btn open">영업 중</button>
+              </article>
+
+              <article class="owner-store-item">
+                <div class="owner-store-main">
+                  <div class="owner-store-name">강남점</div>
+                  <div class="owner-store-date">2026.04.10</div>
+                </div>
+                <div class="owner-store-sub">⭐ 4.2(1,200)</div>
+                <button class="owner-store-status-btn">영업 전</button>
+              </article>
+            </section>
+
+            <h3 class="owner-stores-closed-title">폐업된 가게</h3>
+
+            <section class="owner-stores-list">
+              <article class="owner-store-item closed">
+                <div class="owner-store-main">
+                  <div class="owner-store-name">서초점</div>
+                  <div class="owner-store-date">2026.04.10</div>
+                </div>
+                <div class="owner-store-sub">⭐ 4.2(1,200)</div>
+                <button class="owner-store-status-btn">영업 전</button>
+              </article>
+            </section>
+          </div>
+        </main>
+      </section>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/common.js"></script>
+  </body>
+</html>

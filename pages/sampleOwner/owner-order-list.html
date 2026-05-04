@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>부평점 주문 관리</title>
+    <link rel="stylesheet" href="../../assets/css/owner.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">Eat-Now</div>
+        <nav class="side owner-manage-side">
+          <a class="side-item" href="/pages/owner/owner-store-manage.html">가게 관리</a>
+          <a class="side-item active" href="#">주문 목록</a>
+          <a class="side-item" href="#">리뷰 관리</a>
+          <a class="side-item" href="#">메뉴 관리</a>
+        </nav>
+      </aside>
+
+      <section class="main">
+        <header class="topbar">
+          <a class="topbar-back-link" href="/pages/owner/owner-hongdae.html">부평점 주문 관리</a>
+          <div class="topbar-title">안녕하세요, Eat-Now 부평점 사장님!</div>
+          <div class="topbar-actions">
+            <button class="icon-btn" type="button" aria-label="메뉴">
+              <span class="icon">≡</span>
+            </button>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="owner-order-page">
+            <section class="card owner-order-summary">
+              <h2 class="card-title owner-order-title">오늘의 주문 요약</h2>
+              <div class="owner-order-summary-grid">
+                <div class="owner-order-chip">신규 주문: 15건</div>
+                <div class="owner-order-chip">조리 중: 10건</div>
+                <div class="owner-order-chip">배달 중: 8건</div>
+                <div class="owner-order-chip">완료: 45건</div>
+              </div>
+            </section>
+
+            <div class="owner-order-content-grid">
+              <section class="card owner-order-table-card">
+                <h2 class="card-title owner-order-title">주문 현황 상세 목록</h2>
+
+                <table class="owner-order-table">
+                  <thead>
+                    <tr>
+                      <th>주문 ID</th>
+                      <th>메뉴</th>
+                      <th>가격</th>
+                      <th>주문 시간</th>
+                      <th>상태 변경</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>0655971d-8130-...</td>
+                      <td>두바이 쫀득 쿠키, 카페 라떼</td>
+                      <td>15,000</td>
+                      <td>2026-04-24 12:30</td>
+                      <td>
+                        <select class="owner-order-status-select">
+                          <option>주문 확인 중</option>
+                          <option selected>조리 중</option>
+                          <option>배달 중</option>
+                          <option>배달 완료</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>3a1e2d6f-4f04-...</td>
+                      <td>두바이 쫀득 쿠키</td>
+                      <td>15,000</td>
+                      <td>2026-04-24 12:30</td>
+                      <td><span class="owner-status-badge done">주문 확인 중</span></td>
+                    </tr>
+                    <tr>
+                      <td>5e8f84bd-db88-...</td>
+                      <td>카페 오레</td>
+                      <td>15,000</td>
+                      <td>2026-04-24 12:30</td>
+                      <td><span class="owner-status-badge cooking">조리중</span></td>
+                    </tr>
+                    <tr>
+                      <td>5e8f84bd-db88-...</td>
+                      <td>카라멜 마끼아또</td>
+                      <td>15,000</td>
+                      <td>2026-04-24 12:30</td>
+                      <td><span class="owner-status-badge delivering">배달중</span></td>
+                    </tr>
+                    <tr>
+                      <td>5e8f84bd-db88-...</td>
+                      <td>민초 프라페, 두바이 초콜릿</td>
+                      <td>15,000</td>
+                      <td>2026-04-24 12:30</td>
+                      <td><span class="owner-status-badge complete">완료</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+
+              <section class="card owner-order-cancel-card">
+                <h2 class="card-title owner-order-title">주문 취소</h2>
+
+                <div class="owner-order-cancel-form">
+                  <select class="owner-order-id-select">
+                    <option>주문 Id</option>
+                    <option>0655971d-8130-...</option>
+                    <option>3a1e2d6f-4f04-...</option>
+                  </select>
+
+                  <label class="owner-order-cancel-label" for="cancelReason">
+                    주문 취소사유를 이유를 알려주세요
+                  </label>
+
+                  <textarea
+                    id="cancelReason"
+                    class="owner-order-cancel-textarea"
+                    placeholder="재료 부족입니다."
+                  ></textarea>
+
+                  <button class="owner-action-btn owner-order-cancel-btn">주문 취소</button>
+                </div>
+              </section>
+            </div>
+          </div>
+        </main>
+      </section>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/common.js"></script>
+  </body>
+</html>

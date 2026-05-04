@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>부평점 메뉴 관리</title>
+    <link rel="stylesheet" href="../../assets/css/owner.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">Eat-Now</div>
+        <nav class="side owner-manage-side">
+          <a class="side-item" href="/pages/owner/owner-store-manage.html">가게 관리</a>
+          <a class="side-item" href="/pages/owner/owner-order-list.html">주문 목록</a>
+          <a class="side-item" href="/pages/owner/owner-review-manage.html">리뷰 관리</a>
+          <a class="side-item active" href="#">메뉴 관리</a>
+        </nav>
+      </aside>
+
+      <section class="main">
+        <header class="topbar">
+          <a class="topbar-back-link" href="/pages/owner/owner-hongdae.html">부평점 메뉴 관리</a>
+          <div class="topbar-title">안녕하세요, Eat-Now 부평점 사장님!</div>
+          <div class="topbar-actions">
+            <button class="icon-btn" type="button" aria-label="메뉴">
+              <span class="icon">≡</span>
+            </button>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="owner-menu-page">
+            <h2 class="card-title owner-menu-title">메뉴 관리</h2>
+
+            <section class="owner-menu-list">
+              <article class="owner-menu-item">
+                <div class="owner-menu-info">
+                  <div class="owner-menu-name">두바이 쫀득 쿠키</div>
+                  <div class="owner-menu-price">6,900원</div>
+                </div>
+                <div class="owner-menu-actions">
+                  <button class="owner-menu-edit-btn">메뉴 수정</button>
+                  <button class="owner-menu-delete-btn">메뉴 삭제</button>
+                </div>
+              </article>
+
+              <article class="owner-menu-item">
+                <div class="owner-menu-info">
+                  <div class="owner-menu-name">아메리카노</div>
+                  <div class="owner-menu-price">3,900원</div>
+                </div>
+                <div class="owner-menu-actions">
+                  <button class="owner-menu-edit-btn">메뉴 수정</button>
+                  <button class="owner-menu-delete-btn">메뉴 삭제</button>
+                </div>
+              </article>
+            </section>
+
+            <button class="owner-menu-add-btn">+ 새 메뉴 등록</button>
+          </div>
+        </main>
+      </section>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/common.js"></script>
+  </body>
+</html>
