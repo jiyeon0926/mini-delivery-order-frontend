@@ -12,7 +12,7 @@
     <script src="/assets/js/color-modes.js"></script>
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/assets/css/common.css" rel="stylesheet" />
-    <title>내 가게</title>
+    <title>주문 관리</title>
 
     <style>
         /* 사이드바 */
@@ -116,13 +116,56 @@
             </ul>
         </div>
         <main class="flex-grow-1 ps-5 py-5">
+            <table>
+                <thead>
+                    <tr>
+                        <th>주문 ID</th>
+                        <th>메뉴</th>
+                        <th>가격</th>
+                        <th>주문 시간</th>
+                        <th>상태</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Table cell</td>
+                        <td>Table cell</td>
+                        <td>Table cell</td>
+                        <td>Table cell</td>
+                        <td>Table cell</td>
+                    </tr>
+                    <tr>
+                        <td>Table cell</td>
+                        <td>Table cell</td>
+                        <td>Table cell</td>
+                        <td>Table cell</td>
+                        <td>Table cell</td>
+                    </tr>
+                    <tr>
+                        <td>Table cell</td>
+                        <td>Table cell</td>
+                        <td>Table cell</td>
+                        <td>Table cell</td>
+                        <td>Table cell</td>
+                    </tr>
 
-            <div class="card-body">
-                <h5 class="card-title">지점</h5>
-                <p class="card-text">3.4</p>
-                <button class="btn btn-primary" type="submit">가게 생성하기</button>
+                </tbody>
+            </table>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">주문 취소</h5>
+                    <div class="col-8">
+                        <select id="order ID" class="form-select ID-select">
+                            <option value="ID">주문 ID</option>
+                        </select>
+                    </div>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">주문 취소 하시는 이유를 알려주세요</h6>
+                    <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="주문 취소 이유를 작성해주세요.">
+                    <button class="btn btn-primary" type="submit">주문 취소</button>
+                </div>
             </div>
         </main>
+
     </div>
 
     <script src="/assets/js/bootstrap.bundle.min.js" class="astro-vvvwv3sm"></script>
@@ -180,6 +223,7 @@
             loadOrderCount();
             loadStores();
         });
+
     </script>
 </body>
 
