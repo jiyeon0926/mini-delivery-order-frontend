@@ -217,3 +217,11 @@ function updateStoreStatusAPI(storeId, data) {
     data: JSON.stringify(data),
   });
 }
+
+// 가게 폐업 API
+function storeKillAPI(storeId) {
+  return $.ajax({
+    url: COMMON_URL + `/api/owner/stores/${storeId}`,
+    type: "DELETE",
+  });
+}

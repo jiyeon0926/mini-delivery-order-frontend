@@ -90,8 +90,8 @@
                 aria-labelledby="navbarMenuLabel">
                 <div class="offcanvas-header">
                     <div class="d-flex flex-column">
-                        <h5 class="offcanvas-title mb-0" id="navbarMenuLabel">닉네임</h5>
-                        <div class="small text-white-50">user@naver.com</div>
+                        <h5 class="offcanvas-title mb-0" id="nickname"></h5>
+                        <div class="small text-white-50" id="email"></div>
                     </div>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
                         aria-label="Close"></button>
@@ -105,8 +105,14 @@
                             <a class="nav-link" href="/pages/user/password.html">비밀번호 변경</a>
                         </li>
                         <li class="nav-item">
+                            <button class="nav-link" id="logoutBtn">
+                                로그아웃
+                            </button>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="#">내 가게</a>
                         </li>
+
                         <li class="nav-item">
                             <button class="nav-link btn btn-link text-start text-danger" id="deleteAccountBtn">
                                 회원탈퇴
@@ -120,7 +126,6 @@
     <div class="d-flex">
         <!-- 사이드 바 -->
         <div class="sidebar">
-            <h5 class="fw-bold mb-3">Collapsible</h5>
             <ul class="list-unstyled store-side">
             </ul>
         </div>
@@ -132,7 +137,8 @@
                         <div class="card-body d-flex flex-column gap-2">
                             <h5 class="card-title mb-0">가게 관리</h5>
                             <div class="text-muted small">Quick Menu</div>
-                            <a href="#" class="btn btn-primary btn-sm w-auto align-self-start px-3 mt-auto">가게 폐업</a>
+                            <button class="btn btn-primary btn-sm w-auto align-self-start px-3 mt-auto"
+                                id="storeKillBtn">가게 폐업</button>
                         </div>
                     </div>
                 </div>
@@ -142,7 +148,7 @@
                         <div class="card-body d-flex flex-column gap-2">
                             <h5 class="card-title mb-0">주문 관리</h5>
                             <div class="text-muted small">Quick Menu</div>
-                            <a href="#" class="btn btn-primary btn-sm w-auto align-self-start px-3 mt-auto">주문 취소</a>
+                            <a href="#" class="btn btn-primary btn-sm w-auto align-self-start px-3 mt-auto">주문 취소 요청</a>
                         </div>
                     </div>
                 </div>
@@ -158,12 +164,7 @@
                 </div>
             </div>
             <!-- 메뉴 리스트 -->
-            <div class="mt-3">
-                <div class="card mx-auto" style="max-width: 520px;">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">연동될 메뉴 n개</li>
-                    </ul>
-                </div>
+            <div class="list-group mx-auto py-5" id="menuList" style="max-width: 750px">
             </div>
         </main>
     </div>
@@ -173,16 +174,14 @@
     <script src="/assets/js/api.js"></script>
     <script src="/assets/js/common.js"></script>
     <script>
-        function loadOrderCount() {
-            orderCountAPI().done(function (response) {
-                const pending = response.data.count.pending;
-                const cooking = response.data.count.cooking;
-                const delivering = response.data.count.delivering;
+        function loadProfile() {
+            profileAPI().done(function (response) {
+                const nickname = response.data.nickname;
+                const email = response.data.email;
 
-                $("#pending").text(pending);
-                $("#cooking").text(cooking);
-                $("#delivering").text(delivering);
-            });
+                $("#nickname").text(nickname);
+                $("#email").text(email);
+            })
         }
 
         function renderStoreSide(data) {
@@ -214,15 +213,68 @@
         function loadStores() {
             myStoresAPI().done(function (response) {
                 const data = response.data;
-
                 renderStoreSide(data);
-                renderStores(data);
             });
         }
 
+        function renderMenus(menus) {
+            const menuListHtml = menus
+                .map(
+                    (m) =>
+                        `
+                <div class="list-group-item d-flex align-items-center gap-3 py-3">
+                    <div class="flex-grow-1">
+                      <p class="mb-1 fw-bold">${m.menuName}</p>
+                      <p class="mb-1 text-muted small">${m.price.toLocaleString()}원</p>
+                    </div>
+                </div>
+            `,
+                )
+                .join("");
+
+            $("#menuList").html(menuListHtml);
+        }
+
+        function loadMenus() {
+            const params = new URLSearchParams(window.location.search);
+            const storeId = params.get("storeId");
+
+            storeDetailAPI(storeId)
+                .done(function (response) {
+                    renderMenus(response.data.menus);
+                })
+                .fail(function () {
+                    $("#menuList").html(
+                        "<p class='text-center'>메뉴 정보가 없습니다.</p>",
+                    );
+                });
+        }
+
         $(document).ready(function () {
-            loadOrderCount();
+            loadProfile();
             loadStores();
+            loadMenus();
+        });
+
+        $("#storeKillBtn").on("click", function () {
+            const isOk = confirm("정말로 폐업 하시겠습니까?");
+            if (!isOk) {
+                return;
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const storeId = params.get("storeId");
+
+            storeKillAPI(storeId)
+                .done(function () {
+                    alert("폐업되었습니다.");
+                    window.location.href = "/pages/owner/owner-main.html";
+                })
+                .fail(function (xhr) {
+                    const msg =
+                        xhr?.responseJSON?.message
+                    alert(msg);
+                });
         });
     </script>
 </body>
