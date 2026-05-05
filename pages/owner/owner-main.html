@@ -81,8 +81,8 @@
                 aria-labelledby="navbarMenuLabel">
                 <div class="offcanvas-header">
                     <div class="d-flex flex-column">
-                        <h5 class="offcanvas-title mb-0" id="navbarMenuLabel">닉네임</h5>
-                        <div class="small text-white-50">user@naver.com</div>
+                        <h5 class="offcanvas-title mb-0" id="nickname"></h5>
+                        <div class="small text-white-50" id="email"></div>
                     </div>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
                         aria-label="Close"></button>
@@ -96,8 +96,14 @@
                             <a class="nav-link" href="/pages/user/password.html">비밀번호 변경</a>
                         </li>
                         <li class="nav-item">
+                            <button class="nav-link" id="logoutBtn">
+                                로그아웃
+                            </button>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="#">내 가게</a>
                         </li>
+
                         <li class="nav-item">
                             <button class="nav-link btn btn-link text-start text-danger" id="deleteAccountBtn">
                                 회원탈퇴
@@ -111,24 +117,83 @@
     <div class="d-flex">
         <!-- 사이드 바 -->
         <div class="sidebar">
-            <h5 class="fw-bold mb-3">Collapsible</h5>
             <ul class="list-unstyled store-side">
             </ul>
         </div>
-        <main class="flex-grow-1 ps-5 py-5">
-            <div class="d-flex">
-                <!-- 오늘의 주문 -->
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">오늘의 주문(전체)</h5>
-                        <p class="card-text">접수: <span id="pending"></span>건</p>
-                        <p class="card-text">조리 중: <span id="cooking"></span>건</p>
-                        <p class="card-text">배달 중: <span id="delivering"></span>건</p>
-                    </div>
+        <main class="flex-grow-1 p-4">
+            <div class="container-fluid h-100">
+                <div class="row g-4 align-items-stretch">
+
+                    <!-- 왼쪽: 주문 카드(큰 영역) -->
+                    <section class="col-12 col-lg-8">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4 fs-2 fw-bold">오늘의 주문(전체)</h5>
+
+                                <div class="d-flex flex-column gap-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-4">
+                                            <span class="rounded-circle bg-success"
+                                                style="width:12px;height:12px;"></span>
+                                            <div class="fw-bold fs-4">신규</div>
+                                        </div>
+                                        <div class="fw-bold fs-2"><span id="pending"></span> <span
+                                                class="fs-5 fw-normal">건</span></div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-4">
+                                            <span class="rounded-circle bg-warning"
+                                                style="width:12px;height:12px;"></span>
+                                            <div class="fw-bold fs-4">조리 중</div>
+                                        </div>
+                                        <div class="fw-bold fs-2"><span id="cooking"></span> <span
+                                                class="fs-5 fw-normal">건</span></div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-4">
+                                            <span class="rounded-circle bg-primary"
+                                                style="width:12px;height:12px;"></span>
+                                            <div class="fw-bold fs-4">배달 중</div>
+                                        </div>
+                                        <div class="fw-bold fs-2"><span id="delivering"></span> <span
+                                                class="fs-5 fw-normal">건</span></div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-4">
+                                            <span class="rounded-circle bg-secondary"
+                                                style="width:12px;height:12px;"></span>
+                                            <div class="fw-bold fs-4">배달 완료</div>
+                                        </div>
+                                        <div class="fw-bold fs-2"><span id="delivered"></span> <span
+                                                class="fs-5 fw-normal">건</span></div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-4">
+                                            <span class="rounded-circle bg-danger"
+                                                style="width:12px;height:12px;"></span>
+                                            <div class="fw-bold fs-4">주문 거절</div>
+                                        </div>
+                                        <div class="fw-bold fs-2"><span id="rejected"></span> <span
+                                                class="fs-5 fw-normal">건</span></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 오른쪽: 가게별 영업 상태(세로로 쌓이는 영역) -->
+                    <aside class="col-12 col-lg-4">
+                        <div class="d-flex flex-column gap-3" id="storeList">
+                            <!-- renderStores()에서 여기 안에 카드 형태로 넣으면 1번째 사진처럼 됨 -->
+                        </div>
+                    </aside>
+
                 </div>
-                <!-- 가게별 영업 상태 -->
-                <ul class="list-group py-5" id="storeList">
-                </ul>
             </div>
         </main>
     </div>
@@ -137,15 +202,30 @@
     <script src="/assets/js/api.js"></script>
     <script src="/assets/js/common.js"></script>
     <script>
+        function loadProfile() {
+            profileAPI().done(function (response) {
+                const nickname = response.data.nickname;
+                const email = response.data.email;
+
+                $("#nickname").text(nickname);
+                $("#email").text(email);
+            })
+        }
+
         function loadOrderCount() {
             orderCountAPI().done(function (response) {
-                const pending = response.data.count.pending;
-                const cooking = response.data.count.cooking;
-                const delivering = response.data.count.delivering;
+                const count = response.data.count;
+                const pending = count.pending;
+                const cooking = count.cooking;
+                const delivering = count.delivering;
+                const delivered = count.delivered;
+                const rejected = count.rejected;
 
                 $("#pending").text(pending);
                 $("#cooking").text(cooking);
                 $("#delivering").text(delivering);
+                $("#delivered").text(delivered);
+                $("#rejected").text(rejected);
             });
         }
 
@@ -159,11 +239,11 @@
                     </button>
                     <div class="collapse show" id="home">
                         <ul class="btn-toggle-nav list-unstyled small">
-                            <li><a href="#">대시보드</a></li>
-                            <li><a href="#">가게 관리</a></li>
-                            <li><a href="#">주문 목록</a></li>
-                            <li><a href="#">리뷰 관리</a></li>
-                            <li><a href="#">메뉴 관리</a></li>
+                            <li><a href="/pages/owner/owner-quick.html?storeId=${d.id}">대시보드</a></li>
+                            <li><a href="/pages/owner/owner-store-manage.html?storeId=${d.id}">가게 관리</a></li>
+                            <li><a href="/pages/owner/owner-order-manage.html?storeId=${d.id}">주문 목록</a></li>
+                            <li><a href="/pages/owner/owner-review-manage.html?storeId=${d.id}">리뷰 관리</a></li>
+                            <li><a href="/pages/owner/owner-menu-manage.html?storeId=${d.id}">메뉴 관리</a></li>
 
                         </ul>
                     </div>
@@ -179,16 +259,26 @@
             const storeListHtml = data
                 .filter(d => d.deleted === false)
                 .map((d) => `
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                        <div class="ms-2 me-auto">
-                            <div class="fw-bold">${d.name}</div>
+                    <div class="card">
+                        <div class="card-body d-flex flex-column gap-4">
+                            <div class="fw-bold fs-4">${d.name}</div>
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                                <div class="text-muted fs-5">영업 상태</div>
+                                <div class="form-check form-switch m-0">
+                                    <input
+                                        class="form-check-input m-0"
+                                        style="transform: scale(1.8); transform-origin: right center;"
+                                        type="checkbox"
+                                        role="switch"
+                                        data-store-id="${d.id}"
+                                        ${d.storeStatus === "OPEN" ? "checked" : ""}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" data-store-id="${d.id}"
-                            ${d.storeStatus === "OPEN" ? "checked" : ""}/>
-                        </div>
-                    </li>
-            `).join("")
+                    </div>
+                `)
+                .join("");
 
             $("#storeList").html(storeListHtml);
         }
@@ -203,6 +293,7 @@
         }
 
         $(document).ready(function () {
+            loadProfile();
             loadOrderCount();
             loadStores();
         });
