@@ -158,7 +158,8 @@
                         <div class="card-body d-flex flex-column gap-2">
                             <h5 class="card-title mb-0">리뷰 관리</h5>
                             <div class="text-muted small">Quick Menu</div>
-                            <a href="#" class="btn btn-primary btn-sm w-auto align-self-start px-3 mt-auto">리뷰 관리</a>
+                            <a href="#" class="btn btn-primary btn-sm w-auto align-self-start px-3 mt-auto"
+                                id="reviewLink">리뷰 관리</a>
                         </div>
                     </div>
                 </div>
@@ -194,12 +195,11 @@
                     </button>
                     <div class="collapse show" id="home">
                         <ul class="btn-toggle-nav list-unstyled small">
-                            <li><a href="#">대시보드</a></li>
-                            <li><a href="#">가게 관리</a></li>
-                            <li><a href="#">주문 목록</a></li>
-                            <li><a href="#">리뷰 관리</a></li>
-                            <li><a href="#">메뉴 관리</a></li>
-
+                            <li><a href="/pages/owner/owner-quick.html?storeId=${d.id}">대시보드</a></li>
+                            <li><a href="/pages/owner/owner-store-manage.html?storeId=${d.id}">가게 관리</a></li>
+                            <li><a href="/pages/owner/owner-order-manage.html?storeId=${d.id}">주문 목록</a></li>
+                            <li><a href="/pages/owner/owner-review-manage.html?storeId=${d.id}">리뷰 관리</a></li>
+                            <li><a href="/pages/owner/owner-menu-manage.html?storeId=${d.id}">메뉴 관리</a></li>
                         </ul>
                     </div>
                 </li>
@@ -276,6 +276,16 @@
                     alert(msg);
                 });
         });
+
+        $("#reviewLink").on("click", function () {
+            const params = new URLSearchParams(window.location.search);
+            const storeId = params.get("storeId");
+
+            $("#reviewLink").attr(
+                "href",
+                `/pages/owner/owner-review-manage.html?storeId=${storeId}`,
+            );
+        })
     </script>
 </body>
 
