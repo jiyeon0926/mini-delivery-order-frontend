@@ -81,8 +81,8 @@
                 aria-labelledby="navbarMenuLabel">
                 <div class="offcanvas-header">
                     <div class="d-flex flex-column">
-                        <h5 class="offcanvas-title mb-0" id="navbarMenuLabel">닉네임</h5>
-                        <div class="small text-white-50">user@naver.com</div>
+                        <h5 class="offcanvas-title mb-0" id="nickname"></h5>
+                        <div class="small text-white-50" id="email"></div>
                     </div>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
                         aria-label="Close"></button>
@@ -99,6 +99,11 @@
                             <a class="nav-link" href="#">내 가게</a>
                         </li>
                         <li class="nav-item">
+                            <button class="nav-link" id="logoutBtn">
+                                로그아웃
+                            </button>
+                        </li>
+                        <li class="nav-item">
                             <button class="nav-link btn btn-link text-start text-danger" id="deleteAccountBtn">
                                 회원탈퇴
                             </button>
@@ -111,23 +116,14 @@
     <div class="d-flex">
         <!-- 사이드 바 -->
         <div class="sidebar">
-            <h5 class="fw-bold mb-3">Collapsible</h5>
             <ul class="list-unstyled store-side">
             </ul>
         </div>
         <main class="flex-grow-1 ps-5 py-5">
             <div class="d-flex">
                 <div class="card-body">
-                    <h5 class="card-title">총 리뷰 수 : 랜더링 건 </h5>
-                    <div class="card w-75 mb-3">
-                        <div class="card-body">
-                            <h5 class="card-title">닉네임</h5>
-                            <h5 class="card-title">작성 일시</h5>
-                            <p class="card-text">평
-                            </p>
-                            <a href="#" class="btn btn-primary">리뷰 삭제</a>
-                        </div>
-                    </div>
+                    <h5 class="card-title mb-4">총 리뷰 수 : <span id="total"></span>건</h5>
+                    <div class="w-100 reviews"></div>
                 </div>
             </div>
         </main>
@@ -137,16 +133,14 @@
     <script src="/assets/js/api.js"></script>
     <script src="/assets/js/common.js"></script>
     <script>
-        function loadOrderCount() {
-            orderCountAPI().done(function (response) {
-                const pending = response.data.count.pending;
-                const cooking = response.data.count.cooking;
-                const delivering = response.data.count.delivering;
+        function loadProfile() {
+            profileAPI().done(function (response) {
+                const nickname = response.data.nickname;
+                const email = response.data.email;
 
-                $("#pending").text(pending);
-                $("#cooking").text(cooking);
-                $("#delivering").text(delivering);
-            });
+                $("#nickname").text(nickname);
+                $("#email").text(email);
+            })
         }
 
         function renderStoreSide(data) {
@@ -159,12 +153,11 @@
                     </button>
                     <div class="collapse show" id="home">
                         <ul class="btn-toggle-nav list-unstyled small">
-                            <li><a href="#">대시보드</a></li>
-                            <li><a href="#">가게 관리</a></li>
-                            <li><a href="#">주문 목록</a></li>
-                            <li><a href="#">리뷰 관리</a></li>
-                            <li><a href="#">메뉴 관리</a></li>
-
+                            <li><a href="/pages/owner/owner-quick.html?storeId=${d.id}">대시보드</a></li>
+                            <li><a href="/pages/owner/owner-store-manage.html?storeId=${d.id}">가게 관리</a></li>
+                            <li><a href="/pages/owner/owner-order-manage.html?storeId=${d.id}">주문 목록</a></li>
+                            <li><a href="/pages/owner/owner-review-manage.html?storeId=${d.id}">리뷰 관리</a></li>
+                            <li><a href="/pages/owner/owner-menu-manage.html?storeId=${d.id}">메뉴 관리</a></li>
                         </ul>
                     </div>
                 </li>
@@ -175,19 +168,53 @@
             $(".store-side").html(sideHtml);
         }
 
-
         function loadStores() {
             myStoresAPI().done(function (response) {
                 const data = response.data;
-
                 renderStoreSide(data);
-                renderStores(data);
+            });
+        }
+
+        function renderReviews(data) {
+            const total = data.total;
+            $("#total").text(total.toLocaleString('ko-KR'));
+
+            const reviewHtml = data.reviews
+                .map(
+                    (r) => {
+                        const stars = "★".repeat(r.rating);
+
+                        return `
+                    <div class="card w-75 mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">${r.nickname}</h5>
+                            <h5 class="card-title">${formatDateTime(r.createdAt)}</h5>
+                            <p class="small text-warning mb-3">${stars}</p>
+                            <p class="card-text">${r.content}
+                            </p>
+                            <a href="#" class="btn btn-primary">리뷰 삭제</a>
+                        </div>
+                    </div>
+                `
+                    })
+                .join("");
+
+            $(".reviews").html(reviewHtml);
+        }
+
+        function loadReviews() {
+            const params = new URLSearchParams(window.location.search);
+            const storeId = params.get("storeId");
+
+            storeReviewsAPI(storeId).done(function (response) {
+                renderReviews(response.data);
             });
         }
 
         $(document).ready(function () {
-            loadOrderCount();
+            loadProfile();
             loadStores();
+            loadReviews();
         });
     </script>
 </body>
