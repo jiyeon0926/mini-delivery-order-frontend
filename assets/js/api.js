@@ -225,3 +225,11 @@ function storeKillAPI(storeId) {
     type: "DELETE",
   });
 }
+
+// 리뷰 삭제 API
+function deleteReviewAPI(storeId, reviewId) {
+  return $.ajax({
+    url: COMMON_URL + `/api/owner/stores/${storeId}/reviews/${reviewId}`,
+    type: "DELETE",
+  });
+}
