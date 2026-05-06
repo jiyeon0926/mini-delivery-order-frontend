@@ -74,6 +74,11 @@
         display: flex;
         flex-direction: column;
       }
+
+      .order-id-cell {
+        cursor: pointer;
+        text-decoration: underline;
+      }
     </style>
   </head>
 
@@ -214,30 +219,44 @@
                       <thead class="table-light">
                         <tr>
                           <th scope="col">주문 ID</th>
-                          <th scope="col">메뉴</th>
-                          <th scope="col">가격</th>
+                          <th scope="col">총가격</th>
                           <th scope="col">주문 시간</th>
                           <th scope="col">상태</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <td>Table cell</td>
-                          <td>Table cell</td>
+                          <td
+                            class="order-id-cell text-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#orderDetailModal"
+                          >
+                            ORD-0001
+                          </td>
                           <td>Table cell</td>
                           <td>Table cell</td>
                           <td>Table cell</td>
                         </tr>
                         <tr>
-                          <td>Table cell</td>
-                          <td>Table cell</td>
+                          <td
+                            class="order-id-cell text-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#orderDetailModal"
+                          >
+                            ORD-0002
+                          </td>
                           <td>Table cell</td>
                           <td>Table cell</td>
                           <td>Table cell</td>
                         </tr>
                         <tr>
-                          <td>Table cell</td>
-                          <td>Table cell</td>
+                          <td
+                            class="order-id-cell text-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#orderDetailModal"
+                          >
+                            ORD-0003
+                          </td>
                           <td>Table cell</td>
                           <td>Table cell</td>
                           <td>Table cell</td>
@@ -285,6 +304,63 @@
           </div>
         </div>
       </main>
+    </div>
+
+    <!-- 주문 상세 모달 (정적 구현) -->
+    <div
+      class="modal fade"
+      id="orderDetailModal"
+      tabindex="-1"
+      aria-labelledby="orderDetailModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold" id="orderDetailModalLabel">
+              주문 상세
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col">메뉴명</th>
+                    <th scope="col" class="text-end">갯수</th>
+                    <th scope="col" class="text-end">가격</th>
+                    <th scope="col">주소</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>치킨마요</td>
+                    <td class="text-end">2</td>
+                    <td class="text-end">12,000</td>
+                    <td rowspan="2">서울시 강남구 테헤란로 123</td>
+                  </tr>
+                  <tr>
+                    <td>떡볶이</td>
+                    <td class="text-end">1</td>
+                    <td class="text-end">5,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              닫기
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script
