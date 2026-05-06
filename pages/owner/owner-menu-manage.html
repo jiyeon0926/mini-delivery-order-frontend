@@ -86,6 +86,14 @@
         .menu-kill-btn {
             min-width: 120px;
         }
+
+        /* 편집 모드일 때 입력 박스는 기본 form-control 테두리로 표시 */
+        .card.is-editing .menu-name,
+        .card.is-editing .menu-price {
+            background-color: var(--bs-body-bg) !important;
+            border: var(--bs-border-width) solid var(--bs-border-color) !important;
+            border-radius: var(--bs-border-radius) !important;
+        }
     </style>
 </head>
 
@@ -124,10 +132,9 @@
                             </button>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">내 가게</a>
+                            <a class="nav-link" href="/pages/owner/ownerSelfStore.html">내 가게</a>
                         </li>
                     </ul>
-
                     <div class="mt-auto d-flex justify-content-end">
                         <button class="btn btn-link btn-sm text-danger p-0" id="deleteAccountBtn" type="button">
                             회원탈퇴
@@ -219,7 +226,7 @@
             const priceNum = typeof m?.price === "number" ? m.price : null;
 
             return `
-              <div class="card ${isNew ? "is-new" : ""}" data-menu-id="${menuId}">
+              <div class="card ${isNew ? "is-new is-editing" : ""}" data-menu-id="${menuId}">
                 <div class="card-body d-flex justify-content-between align-items-center gap-3">
                   <div>
                     <input
@@ -294,6 +301,7 @@
             const item = $(this).closest(".card");
 
             item.find("input").prop("disabled", false);
+            item.addClass("is-editing");
             item.find(".edit-btn").addClass("d-none");
             item.find(".save-btn").removeClass("d-none");
             item.find(".menu-name").focus();
@@ -327,6 +335,7 @@
                 .done(function () {
                     // 성공했을 때만 UI 잠그고, 목록을 서버 기준으로 갱신
                     item.find("input").prop("disabled", true);
+                    item.removeClass("is-editing");
                     item.find(".edit-btn").removeClass("d-none");
                     item.find(".save-btn").addClass("d-none");
                     item.removeClass("is-new");
@@ -356,8 +365,7 @@
             deleteMenuAPI(storeId, menuId)
                 .done(function () {
                     alert("삭제되었습니다.");
-                    window.location.href = "/pages/owner/owner-menu-manage.html";
-                })
+                    window.location.href = `/pages/owner/owner-menu-manage.html?storeId=${storeId}`;                })
                 .fail(function (xhr) {
                     const msg = xhr?.responseJSON?.message;
                     alert(msg);
