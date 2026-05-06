@@ -68,6 +68,12 @@
         background: #e9ecef;
         border-radius: 5px;
       }
+
+      /* offcanvas(오른쪽 메뉴) 아래 우측에 회원탈퇴 고정 */
+      .offcanvas-body {
+        display: flex;
+        flex-direction: column;
+      }
     </style>
   </head>
 
@@ -124,15 +130,17 @@
               <li class="nav-item">
                 <button class="nav-link" id="logoutBtn">로그아웃</button>
               </li>
-              <li class="nav-item">
-                <button
-                  class="nav-link btn btn-link text-start text-danger"
-                  id="deleteAccountBtn"
-                >
-                  회원탈퇴
-                </button>
-              </li>
             </ul>
+
+            <div class="mt-auto d-flex justify-content-end">
+              <button
+                class="btn btn-link btn-sm text-danger p-0"
+                id="deleteAccountBtn"
+                type="button"
+              >
+                회원탈퇴
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -140,12 +148,12 @@
     <div class="d-flex">
       <!-- 사이드 바 -->
       <div class="sidebar">
-        <ul class="list-unstyled store-side"></ul>
+        <ul class="list-unstyled store-side" id="storeSideAccordion"></ul>
       </div>
       <main class="flex-grow-1 ps-5 py-5">
         <div class="d-flex">
           <div class="card-body">
-            <h5 class="card-title mb-4">
+            <h5 class="card-title mb-4 fw-bold fs-4">
               총 리뷰 수 : <span id="total"></span>건
             </h5>
             <div class="w-100 reviews"></div>
@@ -175,28 +183,37 @@
       }
 
       function renderStoreSide(data) {
+        const urlStoreId = new URLSearchParams(window.location.search).get(
+          "storeId",
+        );
+        const openIdx = getOwnerSidebarOpenIndex(data, urlStoreId);
         const sideHtml = data
           .map(
-            (d) => `
+            (d, idx) => {
+              const collapseId = `store-side-${d.id}`;
+              const isOpen = idx === openIdx;
+              return `
                     <li>
-                    <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#home" aria-expanded="true">
+                    <button class="btn-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="${isOpen}">
                         ${d.name}
                     </button>
-                    <div class="collapse show" id="home">
+                    <div class="collapse${isOpen ? " show" : ""}" id="${collapseId}" data-bs-parent="#storeSideAccordion">
                         <ul class="btn-toggle-nav list-unstyled small">
                             <li><a href="/pages/owner/owner-quick.html?storeId=${d.id}">대시보드</a></li>
                             <li><a href="/pages/owner/owner-store-manage.html?storeId=${d.id}">가게 관리</a></li>
-                            <li><a href="/pages/owner/owner-order-manage.html?storeId=${d.id}">주문 목록</a></li>
+                            <li><a href="/pages/owner/owner-order-manage.html?storeId=${d.id}">주문 관리</a></li>
                             <li><a href="/pages/owner/owner-review-manage.html?storeId=${d.id}">리뷰 관리</a></li>
                             <li><a href="/pages/owner/owner-menu-manage.html?storeId=${d.id}">메뉴 관리</a></li>
                         </ul>
                     </div>
                 </li>
-                `,
+                `;
+            },
           )
           .join("");
 
         $(".store-side").html(sideHtml);
+        highlightOwnerSidebarNav();
       }
 
       function loadStores() {
@@ -220,7 +237,7 @@
                         <div class="card-body">
                             <h5 class="card-title">${r.nickname}</h5>
                             <h5 class="card-title">${formatDateTime(r.createdAt)}</h5>
-                            <p class="small text-warning mb-3">${stars}</p>
+                            <p class="text-warning mb-3 fw-bold fs-4">${stars}</p>
                             <p class="card-text">${r.content}
                             </p>
                             <button class="btn btn-primary" id=deleteBtn data-review-id=${r.reviewId}>리뷰 삭제</button>

@@ -15,13 +15,55 @@
     <title>가게 관리</title>
 
     <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        /* navbar 아래 본문을 화면에 꽉 차게 */
+        .page-shell {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-body {
+            flex: 1 1 auto;
+            display: flex;
+            min-height: 0;
+            /* 내부 스크롤을 위해 필요 */
+        }
+
         /* 사이드바 */
         .sidebar {
             width: 280px;
-            height: 100vh;
             background: #f8f9fa;
             padding: 20px;
             border-right: 1px solid #ddd;
+            flex: 0 0 auto;
+        }
+
+        /* 오른쪽 컨텐츠 영역 */
+        .content-area {
+            flex: 1 1 auto;
+            min-width: 0;
+            padding: 24px;
+            overflow: auto;
+        }
+
+        .action-btn {
+            min-width: 110px;
+            padding: 10px 16px;
+        }
+
+        /* offcanvas(오른쪽 메뉴) 아래 우측에 회원탈퇴 고정 */
+        .offcanvas-body {
+            display: flex;
+            flex-direction: column;
         }
 
         /* 토글 버튼 */
@@ -76,122 +118,145 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/pages/owner/owner-main.html">Eat Now</a>
-            <div class="d-flex align-items-center gap-3 ms-auto">
-                <!-- 햄버거 -->
-                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="navbarMenu"
-                aria-labelledby="navbarMenuLabel">
-                <div class="offcanvas-header">
-                    <div class="d-flex flex-column">
-                        <h5 class="offcanvas-title mb-0" id="navbarMenuLabel">닉네임</h5>
-                        <div class="small text-white-50">user@naver.com</div>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
-                        aria-label="Close"></button>
+    <div class="page-shell">
+        <nav class="navbar navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/pages/owner/owner-main.html">Eat Now</a>
+                <div class="d-flex align-items-center gap-3 ms-auto">
+                    <!-- 햄버거 -->
+                    <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
                 </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/pages/user/nickname.html">닉네임 변경</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/pages/user/password.html">비밀번호 변경</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">내 가게</a>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link btn btn-link text-start text-danger" id="deleteAccountBtn">
+                <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="navbarMenu"
+                    aria-labelledby="navbarMenuLabel">
+                    <div class="offcanvas-header">
+                        <div class="d-flex flex-column">
+                            <h5 class="offcanvas-title mb-0" id="nickname"></h5>
+                            <div class="small text-white-50" id="email"></div>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/user/nickname.html">닉네임 변경</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/user/password.html">비밀번호 변경</a>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" id="logoutBtn">
+                                    로그아웃
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">내 가게</a>
+                            </li>
+                        </ul>
+
+                        <div class="mt-auto d-flex justify-content-end">
+                            <button class="btn btn-link btn-sm text-danger p-0" id="deleteAccountBtn" type="button">
                                 회원탈퇴
                             </button>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </nav>
-    <div class="d-flex">
-        <!-- 사이드 바 -->
-        <div class="sidebar">
-            <h5 class="fw-bold mb-3">Collapsible</h5>
-            <ul class="list-unstyled store-side">
-            </ul>
-        </div>
-        <!-- 가게 정보 수정 -->
-        <div class="row row-cols-1 row-cols-md-2 g-4">
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">가게 상세 정보 수정</h5>
-                        <div class="mb-3">
-                            <label for="formGroupExampleInput" class="form-label">가게명</label>
-                            <input type="text" class="form-control" id="formGroupExampleInput"
-                                placeholder="Example input placeholder">
-                        </div>
-                        <div class="mb-3">
-                            <label for="formGroupExampleInput2" class="form-label">가게주소</label>
-                            <input type="text" class="form-control" id="formGroupExampleInput2"
-                                placeholder="Another input placeholder">
-                        </div>
-                        <div class="mb-3">
-                            <label for="formGroupExampleInput2" class="form-label">최소주문금액</label>
-                            <input type="text" class="form-control" id="formGroupExampleInput2"
-                                placeholder="Another input placeholder">
-                        </div>
-                        <div class="row align-items-center g-3">
-                            <div class="col-4">
-                                <label for="openTime" class="col-form-label">여는 시간</label>
-                            </div>
-                            <div class="col-8">
-                                <select id="openTime" class="form-select time-select">
-                                    <option value="09:00">09 : 00</option>
-                                    <option value="10:00">10 : 00</option>
-                                    <option value="11:00">11 : 00</option>
-                                    <option value="12:00">12 : 00</option>
-                                    <option value="13:00">13 : 00</option>
-                                    <option value="14:00">14 : 00</option>
-                                    <option value="15:00">15 : 00</option>
-                                    <option value="16:00">16 : 00</option>
-                                </select>
+        </nav>
+
+        <div class="page-body">
+            <!-- 사이드 바 -->
+            <div class="sidebar">
+                <ul class="list-unstyled store-side" id="storeSideAccordion">
+                </ul>
+            </div>
+
+            <!-- 본문 -->
+            <main class="content-area">
+                <div class="m-0">
+                    <!-- 상단: 왼쪽(가게 상태 변경) / 오른쪽(버튼) -->
+                    <div class="row g-4 align-items-stretch m-0">
+                        <div class="col-12 col-md-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold">가게 상태 변경</h5>
+                                    <div class="form-check form-switch form-check-reverse">
+                                        <input class="form-check-input" type="checkbox" id="switchCheckReverse">
+                                        <label class="form-check-label" for="switchCheckReverse">영업 상태</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row align-items-center g-3 mt-2">
-                            <div class="col-4">
-                                <label for="closeTime" class="col-form-label">닫는 시간</label>
+                        <div class="col-12 col-md-4 d-flex">
+                            <div class="d-flex gap-3 w-100 align-items-center justify-content-end">
+                                <button class="btn btn-danger action-btn" type="submit">가게폐업</button>
+                                <button class="btn btn-primary action-btn" type="submit">저장</button>
                             </div>
-                            <div class="col-8">
-                                <select id="closeTime" class="form-select time-select">
-                                    <option value="23:00">23 : 00</option>
-                                    <option value="00:00">00 : 00</option>
-                                    <option value="01:00">01 : 00</option>
-                                    <option value="02:00">02 : 00</option>
-                                </select>
+                        </div>
+                    </div>
+
+                    <!-- 하단: 가게 상세 정보 수정 -->
+                    <div class="row g-4 mt-3 m-0">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold fs-3 mb-2">가게 상세 정보 수정</h5>
+                                    <div class="mb-3">
+                                        <label for="formGroupExampleInput" class="form-label fw-bold">가게명</label>
+                                        <input type="text" class="form-control" id="formGroupExampleInput"
+                                            placeholder="Example input placeholder">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="formGroupExampleInput2" class="form-label fw-bold">가게주소</label>
+                                        <input type="text" class="form-control" id="formGroupExampleInput2"
+                                            placeholder="Another input placeholder">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="formGroupExampleInput2" class="form-label fw-bold">최소주문금액</label>
+                                        <input type="text" class="form-control" id="formGroupExampleInput2"
+                                            placeholder="Another input placeholder">
+                                    </div>
+                                    <div class="row align-items-center g-3">
+                                        <div class="col-4">
+                                            <label for="openTime" class="col-form-label fw-bold">여는 시간</label>
+                                        </div>
+                                        <div class="col-8">
+                                            <select id="openTime" class="form-select time-select">
+                                                <option value="09:00">09 : 00</option>
+                                                <option value="10:00">10 : 00</option>
+                                                <option value="11:00">11 : 00</option>
+                                                <option value="12:00">12 : 00</option>
+                                                <option value="13:00">13 : 00</option>
+                                                <option value="14:00">14 : 00</option>
+                                                <option value="15:00">15 : 00</option>
+                                                <option value="16:00">16 : 00</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row align-items-center g-3 mt-2">
+                                        <div class="col-4">
+                                            <label for="closeTime" class="col-form-label fw-bold">닫는 시간</label>
+                                        </div>
+                                        <div class="col-8">
+                                            <select id="closeTime" class="form-select time-select">
+                                                <option value="23:00">23 : 00</option>
+                                                <option value="00:00">00 : 00</option>
+                                                <option value="01:00">01 : 00</option>
+                                                <option value="02:00">02 : 00</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">가게 상태 변경</h5>
-                        <div class="form-check form-switch form-check-reverse">
-                            <input class="form-check-input" type="checkbox" id="switchCheckReverse">
-                            <label class="form-check-label" for="switchCheckReverse">영업 상태</label>
-                        </div>
-                    </div>
-                </div>
-                <button class="btn btn-primary" type="submit">가게폐업</button>
-                <button class="btn btn-primary" type="submit">저장</button>
-            </div>
+            </main>
         </div>
     </div>
 
@@ -200,55 +265,88 @@
     <script src="/assets/js/api.js"></script>
     <script src="/assets/js/common.js"></script>
     <script>
-        function loadOrderCount() {
-            orderCountAPI().done(function (response) {
-                const pending = response.data.count.pending;
-                const cooking = response.data.count.cooking;
-                const delivering = response.data.count.delivering;
+        function loadProfile() {
+            profileAPI().done(function (response) {
+                const nickname = response.data.nickname;
+                const email = response.data.email;
 
-                $("#pending").text(pending);
-                $("#cooking").text(cooking);
-                $("#delivering").text(delivering);
-            });
+                $("#nickname").text(nickname);
+                $("#email").text(email);
+            })
         }
 
         function renderStoreSide(data) {
+            const urlStoreId = new URLSearchParams(window.location.search).get(
+                "storeId",
+            );
+            const openIdx = getOwnerSidebarOpenIndex(data, urlStoreId);
             const sideHtml = data
                 .map(
-                    (d) => `
+                    (d, idx) => {
+                        const collapseId = `store-side-${d.id}`;
+                        const isOpen = idx === openIdx;
+                        return `
                     <li>
-                    <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#home" aria-expanded="true">
+                    <button class="btn-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="${isOpen}">
                         ${d.name}
                     </button>
-                    <div class="collapse show" id="home">
+                    <div class="collapse${isOpen ? " show" : ""}" id="${collapseId}" data-bs-parent="#storeSideAccordion">
                         <ul class="btn-toggle-nav list-unstyled small">
-                            <li><a href="#">대시보드</a></li>
-                            <li><a href="#">가게 관리</a></li>
-                            <li><a href="#">주문 목록</a></li>
-                            <li><a href="#">리뷰 관리</a></li>
-                            <li><a href="#">메뉴 관리</a></li>
+                            <li><a href="/pages/owner/owner-quick.html?storeId=${d.id}">대시보드</a></li>
+                            <li><a href="/pages/owner/owner-store-manage.html?storeId=${d.id}">가게 관리</a></li>
+                            <li><a href="/pages/owner/owner-order-manage.html?storeId=${d.id}">주문 관리</a></li>
+                            <li><a href="/pages/owner/owner-review-manage.html?storeId=${d.id}">리뷰 관리</a></li>
+                            <li><a href="/pages/owner/owner-menu-manage.html?storeId=${d.id}">메뉴 관리</a></li>
 
                         </ul>
                     </div>
                 </li>
-                `,
+                `;
+                    },
                 )
                 .join("");
 
             $(".store-side").html(sideHtml);
+            highlightOwnerSidebarNav();
+        }
+
+        function renderStores(data) {
+            const storeListHtml = data
+                .filter(d => d.deleted === false)
+                .map((d) => `
+                    <div class="card">
+                        <div class="card-body d-flex flex-column gap-4">
+                            <div class="fw-bold fs-4">${d.name}</div>
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                                <div class="text-muted fs-5">영업 상태</div>
+                                <div class="form-check form-switch m-0">
+                                    <input
+                                        class="form-check-input m-0"
+                                        style="transform: scale(1.8); transform-origin: right center;"
+                                        type="checkbox"
+                                        role="switch"
+                                        data-store-id="${d.id}"
+                                        ${d.storeStatus === "OPEN" ? "checked" : ""}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `)
+                .join("");
+
+            $("#storeList").html(storeListHtml);
         }
 
         function loadStores() {
             myStoresAPI().done(function (response) {
                 const data = response.data;
-
                 renderStoreSide(data);
-                renderStores(data);
             });
         }
 
         $(document).ready(function () {
-            loadOrderCount();
+            loadProfile();
             loadStores();
         });
     </script>

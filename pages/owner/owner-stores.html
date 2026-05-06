@@ -63,6 +63,12 @@
             background: #e9ecef;
             border-radius: 5px;
         }
+
+        /* offcanvas(오른쪽 메뉴) 아래 우측에 회원탈퇴 고정 */
+        .offcanvas-body {
+            display: flex;
+            flex-direction: column;
+        }
     </style>
 </head>
 
@@ -98,12 +104,13 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">내 가게</a>
                         </li>
-                        <li class="nav-item">
-                            <button class="nav-link btn btn-link text-start text-danger" id="deleteAccountBtn">
-                                회원탈퇴
-                            </button>
-                        </li>
                     </ul>
+
+                    <div class="mt-auto d-flex justify-content-end">
+                        <button class="btn btn-link btn-sm text-danger p-0" id="deleteAccountBtn" type="button">
+                            회원탈퇴
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -112,7 +119,7 @@
         <!-- 사이드 바 -->
         <div class="sidebar">
             <h5 class="fw-bold mb-3">Collapsible</h5>
-            <ul class="list-unstyled store-side">
+            <ul class="list-unstyled store-side" id="storeSideAccordion">
             </ul>
         </div>
         <main class="flex-grow-1 ps-5 py-5">
@@ -142,29 +149,38 @@
         }
 
         function renderStoreSide(data) {
+            const urlStoreId = new URLSearchParams(window.location.search).get(
+                "storeId",
+            );
+            const openIdx = getOwnerSidebarOpenIndex(data, urlStoreId);
             const sideHtml = data
                 .map(
-                    (d) => `
+                    (d, idx) => {
+                        const collapseId = `store-side-${d.id}`;
+                        const isOpen = idx === openIdx;
+                        return `
                     <li>
-                    <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#home" aria-expanded="true">
+                    <button class="btn-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="${isOpen}">
                         ${d.name}
                     </button>
-                    <div class="collapse show" id="home">
+                    <div class="collapse${isOpen ? " show" : ""}" id="${collapseId}" data-bs-parent="#storeSideAccordion">
                         <ul class="btn-toggle-nav list-unstyled small">
                             <li><a href="#">대시보드</a></li>
                             <li><a href="#">가게 관리</a></li>
-                            <li><a href="#">주문 목록</a></li>
+                            <li><a href="#">주문 관리</a></li>
                             <li><a href="#">리뷰 관리</a></li>
                             <li><a href="#">메뉴 관리</a></li>
 
                         </ul>
                     </div>
                 </li>
-                `,
+                `;
+                    },
                 )
                 .join("");
 
             $(".store-side").html(sideHtml);
+            highlightOwnerSidebarNav();
         }
 
         function loadStores() {
