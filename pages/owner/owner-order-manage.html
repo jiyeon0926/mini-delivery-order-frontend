@@ -133,7 +133,9 @@
                 <button class="nav-link" id="logoutBtn">로그아웃</button>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/pages/owner/ownerSelfStore.html">내 가게</a>
+                <a class="nav-link" href="/pages/owner/ownerSelfStore.html"
+                  >내 가게</a
+                >
               </li>
             </ul>
 
@@ -240,9 +242,7 @@
                     <label for="orderIdSelect" class="form-label fw-bold"
                       >주문 ID</label
                     >
-                    <select id="orderIdSelect" class="form-select">
-                      <option value="">주문 ID</option>
-                    </select>
+                    <select id="orderIdSelect" class="form-select"></select>
                   </div>
                   <div>
                     <label for="cancelReason" class="form-label fw-bold"
@@ -257,7 +257,8 @@
                   </div>
                   <button
                     class="btn btn-danger mt-2 align-self-start"
-                    type="submit"
+                    type="button"
+                    id="cancelBtn"
                   >
                     주문 취소
                   </button>
@@ -301,19 +302,7 @@
                     <th scope="col">주소</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>치킨마요</td>
-                    <td class="text-end">2</td>
-                    <td class="text-end">12,000</td>
-                    <td rowspan="2">서울시 강남구 테헤란로 123</td>
-                  </tr>
-                  <tr>
-                    <td>떡볶이</td>
-                    <td class="text-end">1</td>
-                    <td class="text-end">5,000</td>
-                  </tr>
-                </tbody>
+                <tbody class="order-detail-table"></tbody>
               </table>
             </div>
           </div>
@@ -399,6 +388,7 @@
           COOKING: "조리 중",
           DELIVERING: "배달 중",
           DELIVERED: "배달 완료",
+          REJECTED: "주문 취소",
         };
 
         return map[status];
@@ -425,6 +415,7 @@
                   class="order-id-cell text-primary"
                   data-bs-toggle="modal"
                   data-bs-target="#orderDetailModal"
+                  data-order-id="${o.orderId}"
                 >
                   ${o.orderNumber}
                 </td>
@@ -439,10 +430,44 @@
         $(".order-table").html(orderTableHtml);
       }
 
-      function loadOrderTable() {
+      function renderOrderDetailTable(data) {
+        const address = data.customerAddress;
+        const orderTableHtml = data.items
+          // map(배열 요소, 요소의 인덱스) → 첫 번째 행에만 rowspan 적용
+          .map((i, idx) => {
+            return `
+              <tr>
+                <td>${i.menuName}</td>
+                <td class="text-end">${i.quantity}</td>
+                <td class="text-end">${i.totalPrice.toLocaleString()}원</td>
+                ${idx === 0 ? `<td rowspan="${data.items.length}">${address}</td>` : ""}
+              </tr>
+          `;
+          })
+          .join("");
+
+        $(".order-detail-table").html(orderTableHtml);
+      }
+
+      function renderOrderIdSelect(orders) {
+        const orderIdSelectHtml = orders
+          .map((o) => {
+            return `
+              <option class="order-id" value=${o.orderId}>${o.orderNumber}</option>
+          `;
+          })
+          .join("");
+
+        $("#orderIdSelect").html(orderIdSelectHtml);
+      }
+
+      function loadOrders() {
         orderListByStoreAPI(storeId)
           .done(function (response) {
-            renderOrderTable(response.data.orders);
+            const orders = response.data.orders;
+
+            renderOrderTable(orders);
+            renderOrderIdSelect(orders);
           })
           .fail(function () {
             $(".order-table").html(`
@@ -467,7 +492,41 @@
         loadProfile();
         loadOrderCount();
         loadStores();
-        loadOrderTable();
+        loadOrders();
+      });
+
+      // event.relatedTarget: data-bs-toggle="modal"이 붙은 요소를 가리킴
+      $("#orderDetailModal").on("show.bs.modal", function (event) {
+        const orderId = $(event.relatedTarget).data("order-id");
+
+        storeOrderDetailAPI(storeId, orderId).done(function (response) {
+          renderOrderDetailTable(response.data);
+        });
+      });
+
+      $("#cancelBtn").on("click", function () {
+        const orderId = $("#orderIdSelect").val();
+
+        const rejectionReason = $("#cancelReason").val().trim();
+        if (!rejectionReason) {
+          alert("주문 취소 사유를 작성해주세요.");
+          $("#cancelReason").focus();
+        }
+
+        const data = {
+          rejectionReason: rejectionReason,
+        };
+
+        ownerOrderCancelAPI(storeId, orderId, data)
+          .done(function () {
+            alert("주문을 취소하였습니다.");
+            loadOrders();
+          })
+          .fail(function (xhr) {
+            if (rejectionReason && xhr.status === 400) {
+              alert("주문 접수 상태일 때만 주문을 취소할 수 있습니다.");
+            }
+          });
       });
     </script>
   </body>
