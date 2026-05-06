@@ -81,7 +81,9 @@
             gap: 20px;
         }
 
-        .menu-action-btn {
+        .edit-btn,
+        .save-btn,
+        .menu-kill-btn {
             min-width: 120px;
         }
     </style>
@@ -145,21 +147,8 @@
             <div class="container-fluid">
                 <div class="menu-wrap">
                     <div class="menu-list">
-                        <div class="card">
-                            <div class="card-body d-flex justify-content-between align-items-center gap-3">
-                                <div>
-                                    <div class="fw-bold fs-4">두바이 쫀득 쿠키</div>
-                                    <div class="text-muted fw-semibold">6,900원</div>
-                                </div>
-                                <div class="d-flex flex-column gap-2 align-items-end">
-                                    <button class="btn btn-primary btn-sm menu-action-btn" type="button">메뉴 수정</button>
-                                    <button class="btn btn-danger btn-sm menu-action-btn" type="button">메뉴 삭제</button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-
-                    <button class="btn btn-light border w-100 mt-4 py-3 fw-bold" type="button">
+                    <button class="btn btn-light border w-100 mt-4 py-3 fw-bold" id="addMenuBtn" type="button">
                         + 새 메뉴 등록
                     </button>
                 </div>
@@ -171,6 +160,9 @@
     <script src="/assets/js/api.js"></script>
     <script src="/assets/js/common.js"></script>
     <script>
+        const storeId = new URLSearchParams(window.location.search).get(
+            "storeId",
+        );
         function loadProfile() {
             profileAPI().done(function (response) {
                 const nickname = response.data.nickname;
@@ -180,23 +172,10 @@
                 $("#email").text(email);
             })
         }
-        function loadOrderCount() {
-            orderCountAPI().done(function (response) {
-                const pending = response.data.count.pending;
-                const cooking = response.data.count.cooking;
-                const delivering = response.data.count.delivering;
-
-                $("#pending").text(pending);
-                $("#cooking").text(cooking);
-                $("#delivering").text(delivering);
-            });
-        }
 
         function renderStoreSide(data) {
-            const urlStoreId = new URLSearchParams(window.location.search).get(
-                "storeId",
-            );
-            const openIdx = getOwnerSidebarOpenIndex(data, urlStoreId);
+
+            const openIdx = getOwnerSidebarOpenIndex(data, storeId);
             const sideHtml = data
                 .map(
                     (d, idx) => {
@@ -234,10 +213,155 @@
             });
         }
 
+        function menuCardHtml(m, { isNew = false } = {}) {
+            const menuId = m?.menuId ?? m?.id ?? "";
+            const menuName = m?.menuName ?? m?.name ?? "";
+            const priceNum = typeof m?.price === "number" ? m.price : null;
+
+            return `
+              <div class="card ${isNew ? "is-new" : ""}" data-menu-id="${menuId}">
+                <div class="card-body d-flex justify-content-between align-items-center gap-3">
+                  <div>
+                    <input
+                      type="text"
+                      class="form-control text-dark fw-bold mb-1 menu-name"
+                      value="${menuName}"
+                      ${isNew ? "" : "disabled"}
+                      style="background:transparent; border:none; width:350px"
+                    />
+
+                    <input
+                      type="text"
+                      class="form-control text-dark text-muted small menu-price"
+                      value="${priceNum === null ? "" : priceNum.toLocaleString()}"
+                      ${isNew ? "" : "disabled"}
+                      style="background:transparent; border:none; text-align:right; width:90px"
+                    />
+                  </div>
+
+                  <div class="ps-4 d-flex flex-column align-items-end gap-2">
+                    <button class="btn btn-primary btn-sm edit-btn ${isNew ? "d-none" : ""}">수정</button>
+                    <button class="btn btn-primary btn-sm save-btn ${isNew ? "" : "d-none"}">저장</button>
+                    <button class="btn btn-danger btn-sm menu-action-btn menu-kill-btn" type="button">
+                      메뉴 삭제
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+        }
+
+        function renderMenus(menus) {
+            const menuListHtml = menus.map((m) => menuCardHtml(m)).join("");
+            $(".menu-list").html(menuListHtml);
+        }
+
+        function loadMenus() {
+            storeDetailAPI(storeId)
+                .done(function (response) {
+                    renderMenus(response.data.menus);
+                })
+                .fail(function () {
+                    $(".menu-list").html(
+                        "<p class='text-center'>메뉴 정보가 없습니다.</p>",
+                    );
+                });
+        }
+
         $(document).ready(function () {
             loadProfile();
-            loadOrderCount();
             loadStores();
+            loadMenus();
+        });
+
+        $("#addMenuBtn").on("click", function () {
+            const existingNew = $(".menu-list .card.is-new").first();
+            if (existingNew.length) {
+                existingNew.find(".menu-name").focus();
+                return;
+            }
+
+            const emptyMenu = { menuId: "", menuName: "", price: null };
+            const html = menuCardHtml(emptyMenu, { isNew: true });
+
+            $(".menu-list").prepend(html);
+
+            const newCard = $(".menu-list .card").first();
+            newCard.find(".menu-name").focus();
+        });
+
+        $(".menu-list").on("click", ".edit-btn", function () {
+            const item = $(this).closest(".card");
+
+            item.find("input").prop("disabled", false);
+            item.find(".edit-btn").addClass("d-none");
+            item.find(".save-btn").removeClass("d-none");
+            item.find(".menu-name").focus();
+        });
+
+        $(".menu-list").on("click", ".save-btn", function () {
+            const item = $(this).closest(".card");
+            const menuId = item.data("menu-id");
+            const menuNameRaw = item.find(".menu-name").val();
+            const menuPriceRaw = item.find(".menu-price").val();
+
+            const menuName = String(menuNameRaw ?? "").trim();
+            const priceNum = parseInt(String(menuPriceRaw ?? "").replace(/,/g, ""), 10);
+
+            if (!menuName) {
+                alert("메뉴명을 입력해주세요.");
+                item.find(".menu-name").focus();
+                return;
+            }
+
+            if (!Number.isFinite(priceNum) || priceNum < 0) {
+                alert("가격을 올바르게 입력해주세요.");
+                item.find(".menu-price").focus();
+                return;
+            }
+
+            const data = { name: menuName, price: priceNum };
+            const req = menuId ? updateMenuAPI(storeId, menuId, data) : addMenuAPI(storeId, data);
+
+            req
+                .done(function () {
+                    // 성공했을 때만 UI 잠그고, 목록을 서버 기준으로 갱신
+                    item.find("input").prop("disabled", true);
+                    item.find(".edit-btn").removeClass("d-none");
+                    item.find(".save-btn").addClass("d-none");
+                    item.removeClass("is-new");
+
+                    loadMenus();
+                })
+                .fail(function (xhr) {
+                    const msg = xhr?.responseJSON?.message;
+                    alert(msg ?? "메뉴를 저장할 수 없습니다.");
+                });
+        });
+
+        $(".menu-list").on("click", ".menu-kill-btn", function () {
+            const isOk = confirm("정말로 삭제 하시겠습니까?");
+            if (!isOk) {
+                return;
+            }
+
+            const menu = $(this).closest(".card");
+            const menuId = menu.data("menu-id");
+            if (!menuId) {
+                // 서버에 아직 생성되지 않은 신규 카드라면 DOM에서만 제거
+                menu.remove();
+                return;
+            }
+
+            deleteMenuAPI(storeId, menuId)
+                .done(function () {
+                    alert("삭제되었습니다.");
+                    window.location.href = "/pages/owner/owner-menu-manage.html";
+                })
+                .fail(function (xhr) {
+                    const msg = xhr?.responseJSON?.message;
+                    alert(msg);
+                });
         });
     </script>
 </body>
