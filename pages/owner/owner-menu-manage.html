@@ -63,6 +63,27 @@
             background: #e9ecef;
             border-radius: 5px;
         }
+
+        /* offcanvas(오른쪽 메뉴) 아래 우측에 회원탈퇴 고정 */
+        .offcanvas-body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 메뉴 관리 레이아웃 (Figma처럼 가운데 넓게) */
+        .menu-wrap {
+            max-width: 920px;
+        }
+
+        .menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .menu-action-btn {
+            min-width: 120px;
+        }
     </style>
 </head>
 
@@ -81,8 +102,8 @@
                 aria-labelledby="navbarMenuLabel">
                 <div class="offcanvas-header">
                     <div class="d-flex flex-column">
-                        <h5 class="offcanvas-title mb-0" id="navbarMenuLabel">닉네임</h5>
-                        <div class="small text-white-50">user@naver.com</div>
+                        <h5 class="offcanvas-title mb-0" id="nickname"></h5>
+                        <div class="small text-white-50" id="email"></div>
                     </div>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
                         aria-label="Close"></button>
@@ -96,14 +117,20 @@
                             <a class="nav-link" href="/pages/user/password.html">비밀번호 변경</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">내 가게</a>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link btn btn-link text-start text-danger" id="deleteAccountBtn">
-                                회원탈퇴
+                            <button class="nav-link" id="logoutBtn">
+                                로그아웃
                             </button>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">내 가게</a>
+                        </li>
                     </ul>
+
+                    <div class="mt-auto d-flex justify-content-end">
+                        <button class="btn btn-link btn-sm text-danger p-0" id="deleteAccountBtn" type="button">
+                            회원탈퇴
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -111,22 +138,31 @@
     <div class="d-flex">
         <!-- 사이드 바 -->
         <div class="sidebar">
-            <h5 class="fw-bold mb-3">Collapsible</h5>
-            <ul class="list-unstyled store-side">
+            <ul class="list-unstyled store-side" id="storeSideAccordion">
             </ul>
         </div>
         <main class="flex-grow-1 ps-5 py-5">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">두바이 쫀득 쿠키</h5>
-                    <p class="card-text">6,900원(랜더링?)</p>
-                    <button class="btn btn-primary" type="submit">메뉴 수정</button>
-                    <button class="btn btn-primary" type="submit">메뉴 삭제</button>
-                </div>
+            <div class="container-fluid">
+                <div class="menu-wrap">
+                    <div class="menu-list">
+                        <div class="card">
+                            <div class="card-body d-flex justify-content-between align-items-center gap-3">
+                                <div>
+                                    <div class="fw-bold fs-4">두바이 쫀득 쿠키</div>
+                                    <div class="text-muted fw-semibold">6,900원</div>
+                                </div>
+                                <div class="d-flex flex-column gap-2 align-items-end">
+                                    <button class="btn btn-primary btn-sm menu-action-btn" type="button">메뉴 수정</button>
+                                    <button class="btn btn-danger btn-sm menu-action-btn" type="button">메뉴 삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            </div>
-            <div class="card-body">
-                <button class="btn btn-primary" type="submit">새 메뉴 등록</button>
+                    <button class="btn btn-light border w-100 mt-4 py-3 fw-bold" type="button">
+                        + 새 메뉴 등록
+                    </button>
+                </div>
             </div>
         </main>
     </div>
@@ -135,6 +171,15 @@
     <script src="/assets/js/api.js"></script>
     <script src="/assets/js/common.js"></script>
     <script>
+        function loadProfile() {
+            profileAPI().done(function (response) {
+                const nickname = response.data.nickname;
+                const email = response.data.email;
+
+                $("#nickname").text(nickname);
+                $("#email").text(email);
+            })
+        }
         function loadOrderCount() {
             orderCountAPI().done(function (response) {
                 const pending = response.data.count.pending;
@@ -150,23 +195,26 @@
         function renderStoreSide(data) {
             const sideHtml = data
                 .map(
-                    (d) => `
+                    (d, idx) => {
+                        const collapseId = `store-side-${d.id}`;
+                        const isOpen = idx === 0;
+                        return `
                     <li>
-                    <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#home" aria-expanded="true">
+                    <button class="btn-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="${isOpen}">
                         ${d.name}
                     </button>
-                    <div class="collapse show" id="home">
+                    <div class="collapse${isOpen ? " show" : ""}" id="${collapseId}" data-bs-parent="#storeSideAccordion">
                         <ul class="btn-toggle-nav list-unstyled small">
-                            <li><a href="#">대시보드</a></li>
-                            <li><a href="#">가게 관리</a></li>
-                            <li><a href="#">주문 목록</a></li>
-                            <li><a href="#">리뷰 관리</a></li>
-                            <li><a href="#">메뉴 관리</a></li>
-
+                            <li><a href="/pages/owner/owner-quick.html?storeId=${d.id}">대시보드</a></li>
+                            <li><a href="/pages/owner/owner-store-manage.html?storeId=${d.id}">가게 관리</a></li>
+                            <li><a href="/pages/owner/owner-order-manage.html?storeId=${d.id}">주문 관리</a></li>
+                            <li><a href="/pages/owner/owner-review-manage.html?storeId=${d.id}">리뷰 관리</a></li>
+                            <li><a href="/pages/owner/owner-menu-manage.html?storeId=${d.id}">메뉴 관리</a></li>
                         </ul>
                     </div>
                 </li>
-                `,
+                `;
+                    },
                 )
                 .join("");
 
@@ -178,11 +226,11 @@
                 const data = response.data;
 
                 renderStoreSide(data);
-                renderStores(data);
             });
         }
 
         $(document).ready(function () {
+            loadProfile();
             loadOrderCount();
             loadStores();
         });
