@@ -98,6 +98,16 @@ function updateStoreAPI(storeId, data) {
   });
 }
 
+// 가게 생성 API (사장)
+function createStoreAPI(data) {
+  return $.ajax({
+    url: COMMON_URL + "/api/owner/stores",
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(data),
+  });
+}
+
 
 // 가게 단건 조회 API
 function storeDetailAPI(storeId) {
