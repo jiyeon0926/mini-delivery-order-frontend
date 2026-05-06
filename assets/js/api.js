@@ -243,3 +243,11 @@ function updateMenuAPI(storeId, menuId, data) {
     data: JSON.stringify(data),
   });
 }
+
+// 가게 주문 수 조회 API
+function orderCountByStoreAPI(storeId) {
+  return $.ajax({
+    url: COMMON_URL + `/api/owner/stores/${storeId}/orders/count`,
+    type: "GET",
+  });
+}
