@@ -245,13 +245,31 @@ function deleteReviewAPI(storeId, reviewId) {
   });
 }
 
-// 메뉴 수정 API
+// 메뉴 수정(사장) API
 function updateMenuAPI(storeId, menuId, data) {
   return $.ajax({
     url: COMMON_URL + `/api/owner/stores/${storeId}/menus/${menuId}`,
     type: "PATCH",
     contentType: "application/json",
     data: JSON.stringify(data),
+  });
+}
+
+// 메뉴 생성 API
+function addMenuAPI(storeId, data) {
+  return $.ajax({
+    url: COMMON_URL + `/api/owner/stores/${storeId}/menus`,
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(data),
+  });
+}
+
+// 메뉴 삭제 API
+function deleteMenuAPI(storeId, menuId) {
+  return $.ajax({
+    url: COMMON_URL + `/api/owner/stores/${storeId}/menus/${menuId}`,
+    type: "DELETE",
   });
 }
 
