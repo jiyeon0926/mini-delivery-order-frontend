@@ -88,6 +88,17 @@ function searchStoresAPI(keyword) {
   });
 }
 
+// 가게 수정 API
+function updateStoreAPI(storeId, data) {
+  return $.ajax({
+    url: COMMON_URL + `/api/owner/stores/${storeId}`,
+    type: "PATCH",
+    contentType: "application/json",
+    data: JSON.stringify(data),
+  });
+}
+
+
 // 가게 단건 조회 API
 function storeDetailAPI(storeId) {
   return $.ajax({
@@ -158,7 +169,7 @@ function customerOrderDetailAPI(orderId) {
   });
 }
 
-// 주문 취소 API
+// 주문 취소 (사용자)API
 function cancelOrderAPI(orderId) {
   return $.ajax({
     url: COMMON_URL + `/api/orders/${orderId}`,
@@ -249,5 +260,31 @@ function orderCountByStoreAPI(storeId) {
   return $.ajax({
     url: COMMON_URL + `/api/owner/stores/${storeId}/orders/count`,
     type: "GET",
+  });
+}
+
+// 가게 주문 목록 조회 API
+function orderListByStoreAPI(storeId) {
+  return $.ajax({
+    url: COMMON_URL + `/api/owner/stores/${storeId}/orders`,
+    type: "GET",
+  });
+}
+
+// 가게 주문 단건 조회 API
+function storeOrderDetailAPI(storeId, orderId) {
+  return $.ajax({
+    url: COMMON_URL + `/api/owner/stores/${storeId}/orders/${orderId}`,
+    type: "GET",
+  });
+}
+
+// 주문 취소 (사장)API
+function ownerOrderCancelAPI(storeId, orderId, data) {
+  return $.ajax({
+    url: COMMON_URL + `/api/owner/stores/${storeId}/orders/${orderId}/reject`,
+    type: "PATCH",
+    contentType: "application/json",
+    data: JSON.stringify(data),
   });
 }
