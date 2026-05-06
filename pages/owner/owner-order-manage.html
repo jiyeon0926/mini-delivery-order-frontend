@@ -224,44 +224,7 @@
                           <th scope="col">상태</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <tr>
-                          <td
-                            class="order-id-cell text-primary"
-                            data-bs-toggle="modal"
-                            data-bs-target="#orderDetailModal"
-                          >
-                            ORD-0001
-                          </td>
-                          <td>Table cell</td>
-                          <td>Table cell</td>
-                          <td>Table cell</td>
-                        </tr>
-                        <tr>
-                          <td
-                            class="order-id-cell text-primary"
-                            data-bs-toggle="modal"
-                            data-bs-target="#orderDetailModal"
-                          >
-                            ORD-0002
-                          </td>
-                          <td>Table cell</td>
-                          <td>Table cell</td>
-                          <td>Table cell</td>
-                        </tr>
-                        <tr>
-                          <td
-                            class="order-id-cell text-primary"
-                            data-bs-toggle="modal"
-                            data-bs-target="#orderDetailModal"
-                          >
-                            ORD-0003
-                          </td>
-                          <td>Table cell</td>
-                          <td>Table cell</td>
-                          <td>Table cell</td>
-                        </tr>
-                      </tbody>
+                      <tbody class="order-table"></tbody>
                     </table>
                   </div>
                 </div>
@@ -355,7 +318,11 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
               닫기
             </button>
           </div>
@@ -426,6 +393,68 @@
         highlightOwnerSidebarNav();
       }
 
+      function formatOrderStatus(status) {
+        const map = {
+          PENDING: "주문 접수",
+          COOKING: "조리 중",
+          DELIVERING: "배달 중",
+          DELIVERED: "배달 완료",
+        };
+
+        return map[status];
+      }
+
+      function renderOrderTable(orders) {
+        if (orders.length === 0) {
+          $(".order-table").html(`
+                                  <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                      주문 내역이 없습니다.
+                                    </td>
+                                  </tr>
+                                `);
+
+          return;
+        }
+
+        const orderTableHtml = orders
+          .map((o) => {
+            return `
+              <tr>
+                <td
+                  class="order-id-cell text-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#orderDetailModal"
+                >
+                  ${o.orderNumber}
+                </td>
+                <td>${o.totalAmount.toLocaleString()}원</td>
+                <td>${formatDateTime(o.createdAt)}</td>
+                <td>${formatOrderStatus(o.orderStatus)}</td>
+              </tr>
+          `;
+          })
+          .join("");
+
+        $(".order-table").html(orderTableHtml);
+      }
+
+      function loadOrderTable() {
+        orderListByStoreAPI(storeId)
+          .done(function (response) {
+            renderOrderTable(response.data.orders);
+          })
+          .fail(function () {
+            $(".order-table").html(`
+                                  <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                      주문 내역이 없습니다.
+                                    </td>
+                                  </tr>
+                                `);
+          });
+      }
+
       function loadStores() {
         myStoresAPI().done(function (response) {
           const data = response.data;
@@ -438,6 +467,7 @@
         loadProfile();
         loadOrderCount();
         loadStores();
+        loadOrderTable();
       });
     </script>
   </body>
