@@ -233,3 +233,13 @@ function deleteReviewAPI(storeId, reviewId) {
     type: "DELETE",
   });
 }
+
+// 메뉴 수정 API
+function updateMenuAPI(storeId, menuId, data) {
+  return $.ajax({
+    url: COMMON_URL + `/api/owner/stores/${storeId}/menus/${menuId}`,
+    type: "PATCH",
+    contentType: "application/json",
+    data: JSON.stringify(data),
+  });
+}
