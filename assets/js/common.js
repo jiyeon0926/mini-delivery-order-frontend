@@ -80,3 +80,51 @@ function formatDateTime(datetime) {
 function formatDate(datetime) {
   return datetime.slice(0, 10);
 }
+
+/** URL의 storeId에 맞는 가게 접힘을 연다. 없거나 불일치 시 0번 가게 */
+function getOwnerSidebarOpenIndex(storeList, urlStoreId) {
+  if (!storeList || !storeList.length) {
+    return 0;
+  }
+  if (urlStoreId == null) {
+    return 0;
+  }
+  const found = storeList.findIndex((s) => String(s.id) === String(urlStoreId));
+  return found >= 0 ? found : 0;
+}
+
+/** 사장(owner) 사이드바: 현재 페이지·가게(storeId)와 같은 링크에 active 표시 */
+function highlightOwnerSidebarNav() {
+  const path = window.location.pathname.replace(/\\/g, "/");
+  const pageStoreId = new URLSearchParams(window.location.search).get(
+    "storeId",
+  );
+
+  $(".store-side .btn-toggle-nav a").removeClass("active");
+  $(".store-side .btn-toggle-nav a").each(function () {
+    const href = $(this).attr("href");
+    if (!href || href === "#" || href.startsWith("#")) {
+      return;
+    }
+    try {
+      const u = new URL(href, window.location.href);
+      const linkPath = u.pathname.replace(/\\/g, "/");
+      const linkStoreId = u.searchParams.get("storeId");
+
+      if (linkPath !== path) {
+        return;
+      }
+      if (pageStoreId != null) {
+        if (String(linkStoreId) !== String(pageStoreId)) {
+          return;
+        }
+      } else if (linkStoreId != null) {
+        return;
+      }
+
+      $(this).addClass("active");
+    } catch (e) {
+      /* ignore invalid href */
+    }
+  });
+}

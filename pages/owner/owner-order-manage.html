@@ -121,7 +121,6 @@
     <div class="d-flex">
         <!-- 사이드 바 -->
         <div class="sidebar">
-            <h5 class="fw-bold mb-3">Collapsible</h5>
             <ul class="list-unstyled store-side" id="storeSideAccordion">
             </ul>
         </div>
@@ -260,11 +259,15 @@
         }
 
         function renderStoreSide(data) {
+            const urlStoreId = new URLSearchParams(window.location.search).get(
+                "storeId",
+            );
+            const openIdx = getOwnerSidebarOpenIndex(data, urlStoreId);
             const sideHtml = data
                 .map(
                     (d, idx) => {
                         const collapseId = `store-side-${d.id}`;
-                        const isOpen = idx === 0;
+                        const isOpen = idx === openIdx;
                         return `
                     <li>
                     <button class="btn-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="${isOpen}">
@@ -286,6 +289,7 @@
                 .join("");
 
             $(".store-side").html(sideHtml);
+            highlightOwnerSidebarNav();
         }
 
         function loadStores() {
