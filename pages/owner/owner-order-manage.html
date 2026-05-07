@@ -223,6 +223,7 @@
                           <th scope="col">주문 ID</th>
                           <th scope="col">총가격</th>
                           <th scope="col">주문 시간</th>
+                          <th scope="col">주문 취소 사유</th>
                           <th scope="col">상태</th>
                         </tr>
                       </thead>
@@ -298,7 +299,7 @@
                   <tr>
                     <th scope="col">메뉴명</th>
                     <th scope="col" class="text-end">갯수</th>
-                    <th scope="col" class="text-end">가격</th>
+                    <th scope="col" class="text-end">단가</th>
                     <th scope="col">주소</th>
                   </tr>
                 </thead>
@@ -328,6 +329,30 @@
     <script>
       const params = new URLSearchParams(window.location.search);
       const storeId = params.get("storeId");
+
+      /** 목록 API에 rejectionReason이 없을 때: 직전에 취소한 사유를 표시용으로 보관 */
+      function rejectionReasonStorageKey(orderId) {
+        return `ownerOrderRejectReason:${storeId}:${String(orderId)}`;
+      }
+
+      function getStoredRejectionReason(orderId) {
+        try {
+          return sessionStorage.getItem(rejectionReasonStorageKey(orderId)) || "";
+        } catch (e) {
+          return "";
+        }
+      }
+
+      function setStoredRejectionReason(orderId, reason) {
+        try {
+          sessionStorage.setItem(
+            rejectionReasonStorageKey(orderId),
+            String(reason),
+          );
+        } catch (e) {
+          /* ignore quota / private mode */
+        }
+      }
 
       function loadProfile() {
         profileAPI().done(function (response) {
@@ -394,11 +419,41 @@
         return map[status];
       }
 
+      function escapeHtml(text) {
+        if (text == null || text === "") {
+          return "";
+        }
+        return String(text)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      /** 목록 API에서 취소 사유 필드명이 다를 수 있어 보조 키 포함 */
+      function getOrderRejectionReason(o) {
+        return (
+          o.rejectionReason ??
+          o.rejection_reason ??
+          o.cancelReason ??
+          ""
+        );
+      }
+
+      function formatCancellationReasonCell(o) {
+        if (o.orderStatus !== "REJECTED") {
+          return "—";
+        }
+        const reason =
+          getOrderRejectionReason(o) || getStoredRejectionReason(o.orderId);
+        return reason ? escapeHtml(reason) : "—";
+      }
+
       function renderOrderTable(orders) {
         if (orders.length === 0) {
           $(".order-table").html(`
                                   <tr>
-                                    <td colspan="4" class="text-center text-muted py-4">
+                                    <td colspan="5" class="text-center text-muted py-4">
                                       주문 내역이 없습니다.
                                     </td>
                                   </tr>
@@ -421,6 +476,7 @@
                 </td>
                 <td>${o.totalAmount.toLocaleString()}원</td>
                 <td>${formatDateTime(o.createdAt)}</td>
+                <td class="text-muted">${formatCancellationReasonCell(o)}</td>
                 <td>${formatOrderStatus(o.orderStatus)}</td>
               </tr>
           `;
@@ -430,16 +486,30 @@
         $(".order-table").html(orderTableHtml);
       }
 
+      /** 상세 API: 단가는 price, 없으면 totalPrice ÷ 수량 */
+      function orderItemUnitPrice(item) {
+        if (item.price != null && item.price !== "") {
+          return Number(item.price);
+        }
+        const qty = Number(item.quantity);
+        const total = Number(item.totalPrice);
+        if (!qty || qty < 1) {
+          return total;
+        }
+        return Math.round(total / qty);
+      }
+
       function renderOrderDetailTable(data) {
         const address = data.customerAddress;
         const orderTableHtml = data.items
           // map(배열 요소, 요소의 인덱스) → 첫 번째 행에만 rowspan 적용
           .map((i, idx) => {
+            const unit = orderItemUnitPrice(i);
             return `
               <tr>
                 <td>${i.menuName}</td>
                 <td class="text-end">${i.quantity}</td>
-                <td class="text-end">${i.totalPrice.toLocaleString()}원</td>
+                <td class="text-end">${unit.toLocaleString()}원</td>
                 ${idx === 0 ? `<td rowspan="${data.items.length}">${address}</td>` : ""}
               </tr>
           `;
@@ -450,10 +520,18 @@
       }
 
       function renderOrderIdSelect(orders) {
-        const orderIdSelectHtml = orders
+        const cancellable = orders.filter((o) => o.orderStatus === "PENDING");
+        if (cancellable.length === 0) {
+          $("#orderIdSelect").html(
+            `<option value="">취소 가능한 주문이 없습니다</option>`,
+          );
+          return;
+        }
+
+        const orderIdSelectHtml = cancellable
           .map((o) => {
             return `
-              <option class="order-id" value=${o.orderId}>${o.orderNumber}</option>
+              <option class="order-id" value="${o.orderId}">${o.orderNumber}</option>
           `;
           })
           .join("");
@@ -472,11 +550,14 @@
           .fail(function () {
             $(".order-table").html(`
                                   <tr>
-                                    <td colspan="4" class="text-center text-muted py-4">
+                                    <td colspan="5" class="text-center text-muted py-4">
                                       주문 내역이 없습니다.
                                     </td>
                                   </tr>
                                 `);
+            $("#orderIdSelect").html(
+              `<option value="">목록을 불러올 수 없습니다</option>`,
+            );
           });
       }
 
@@ -508,9 +589,14 @@
         const orderId = $("#orderIdSelect").val();
 
         const rejectionReason = $("#cancelReason").val().trim();
+        if (!orderId) {
+          alert("취소할 주문을 선택해주세요.");
+          return;
+        }
         if (!rejectionReason) {
           alert("주문 취소 사유를 작성해주세요.");
           $("#cancelReason").focus();
+          return;
         }
 
         const data = {
@@ -519,7 +605,10 @@
 
         ownerOrderCancelAPI(storeId, orderId, data)
           .done(function () {
+            setStoredRejectionReason(orderId, rejectionReason);
             alert("주문을 취소하였습니다.");
+            $("#cancelReason").val("");
+            loadOrderCount();
             loadOrders();
           })
           .fail(function (xhr) {
