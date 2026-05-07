@@ -171,25 +171,24 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label fw-bold" for="newStoreName">가게명</label>
-                        <input class="form-control" id="newStoreName" type="text" placeholder="예) 홍대점" />
+                        <input class="form-control" id="newStoreName" type="text" autocomplete="organization" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold" for="newStoreAddress">가게주소</label>
-                        <input class="form-control" id="newStoreAddress" type="text" placeholder="예) 서울 ..." />
+                        <input class="form-control" id="newStoreAddress" type="text" autocomplete="street-address" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold" for="newStoreMinOrderAmount">최소주문금액</label>
-                        <input class="form-control" id="newStoreMinOrderAmount" type="number" min="0"
-                            placeholder="예) 12000" />
+                        <input class="form-control" id="newStoreMinOrderAmount" type="number" min="0" />
                     </div>
                     <div class="row g-3">
                         <div class="col-6">
                             <label class="form-label fw-bold" for="newStoreOpenTime">여는 시간</label>
-                            <input class="form-control" id="newStoreOpenTime" type="time" value="09:00" />
+                            <select class="form-select" id="newStoreOpenTime"></select>
                         </div>
                         <div class="col-6">
                             <label class="form-label fw-bold" for="newStoreCloseTime">닫는 시간</label>
-                            <input class="form-control" id="newStoreCloseTime" type="time" value="22:00" />
+                            <select class="form-select" id="newStoreCloseTime"></select>
                         </div>
                     </div>
                 </div>
@@ -311,6 +310,30 @@
                 });
         });
 
+        /** 드롭다운 라벨: "09 : 00" 형식 (30분 간격) */
+        function formatStoreTimeLabel(h, m) {
+            const hh = String(h).padStart(2, "0");
+            const mm = String(m).padStart(2, "0");
+            return `${hh} : ${mm}`;
+        }
+
+        /** API 전송값: "09:00" */
+        function formatStoreTimeValue(h, m) {
+            return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+        }
+
+        /** 30분 단위 전체 시간 옵션 (00:00 ~ 23:30) */
+        function populateStoreHalfHourSelect($select) {
+            $select.empty();
+            for (let hour = 0; hour < 24; hour++) {
+                for (let minute = 0; minute < 60; minute += 30) {
+                    const value = formatStoreTimeValue(hour, minute);
+                    const label = formatStoreTimeLabel(hour, minute);
+                    $("<option>").val(value).text(label).appendTo($select);
+                }
+            }
+        }
+
         function resetCreateStoreForm() {
             $("#newStoreName").val("");
             $("#newStoreAddress").val("");
@@ -319,6 +342,10 @@
             $("#newStoreCloseTime").val("22:00");
             $("#createStoreBtn").prop("disabled", false).text("생성");
         }
+
+        populateStoreHalfHourSelect($("#newStoreOpenTime"));
+        populateStoreHalfHourSelect($("#newStoreCloseTime"));
+        resetCreateStoreForm();
 
         $("#createStoreModal").on("shown.bs.modal", function () {
             $("#newStoreName").trigger("focus");
