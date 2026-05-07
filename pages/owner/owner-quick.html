@@ -218,6 +218,64 @@
       </main>
     </div>
 
+    <!-- 주문 취소 요청 모달 -->
+    <div
+      class="modal fade"
+      id="quickOrderCancelModal"
+      tabindex="-1"
+      aria-labelledby="quickOrderCancelModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title fw-bold fs-4" id="quickOrderCancelModalLabel">
+              주문 취소
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body pt-2">
+            <div class="card border">
+              <div class="card-body d-flex flex-column gap-3">
+                <div>
+                  <label for="quickCancelOrderSelect" class="form-label fw-bold"
+                    >주문 ID</label
+                  >
+                  <select
+                    id="quickCancelOrderSelect"
+                    class="form-select"
+                  ></select>
+                </div>
+                <div>
+                  <label for="quickCancelReason" class="form-label fw-bold"
+                    >주문 취소 사유</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="quickCancelReason"
+                    placeholder="주문 취소 이유를 작성해주세요."
+                  />
+                </div>
+                <button
+                  class="btn btn-danger mt-2 align-self-start"
+                  type="button"
+                  id="quickCancelSubmitBtn"
+                >
+                  주문 취소
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script
       src="/assets/js/bootstrap.bundle.min.js"
       class="astro-vvvwv3sm"
@@ -347,10 +405,124 @@
           });
       }
 
+      function rejectionReasonStorageKey(orderId) {
+        return `ownerOrderRejectReason:${storeId}:${String(orderId)}`;
+      }
+
+      function setStoredRejectionReason(orderId, reason) {
+        try {
+          sessionStorage.setItem(
+            rejectionReasonStorageKey(orderId),
+            String(reason),
+          );
+        } catch (e) {
+          /* ignore */
+        }
+      }
+
+      function renderQuickCancelOrderSelect(orders) {
+        const cancellable = orders.filter((o) => o.orderStatus === "PENDING");
+        if (cancellable.length === 0) {
+          $("#quickCancelOrderSelect").html(
+            `<option value="">취소 가능한 주문이 없습니다</option>`,
+          );
+          return;
+        }
+        const html = cancellable
+          .map(
+            (o) =>
+              `<option value="${o.orderId}">${o.orderNumber}</option>`,
+          )
+          .join("");
+        $("#quickCancelOrderSelect").html(html);
+      }
+
+      function loadOrdersForQuickCancelModal() {
+        orderListByStoreAPI(storeId)
+          .done(function (response) {
+            const orders = response.data.orders || [];
+            renderQuickCancelOrderSelect(orders);
+          })
+          .fail(function () {
+            $("#quickCancelOrderSelect").html(
+              `<option value="">목록을 불러올 수 없습니다</option>`,
+            );
+          });
+      }
+
+      function resetQuickCancelForm() {
+        $("#quickCancelReason").val("");
+        $("#quickCancelSubmitBtn").prop("disabled", false).text("주문 취소");
+      }
+
       $(document).ready(function () {
         loadProfile();
         loadStores();
         loadMenus();
+      });
+
+      $("#ordCancelReqBtn").on("click", function () {
+        if ($(this).prop("disabled")) {
+          return;
+        }
+        resetQuickCancelForm();
+        const modalEl = document.getElementById("quickOrderCancelModal");
+        const modal =
+          bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.show();
+      });
+
+      $("#quickOrderCancelModal").on("shown.bs.modal", function () {
+        loadOrdersForQuickCancelModal();
+      });
+
+      $("#quickOrderCancelModal").on("hidden.bs.modal", function () {
+        resetQuickCancelForm();
+        $("#quickCancelOrderSelect").html("");
+      });
+
+      $("#quickCancelSubmitBtn").on("click", function () {
+        const orderId = $("#quickCancelOrderSelect").val();
+        const rejectionReason = $("#quickCancelReason").val().trim();
+
+        if (!orderId) {
+          alert("취소할 주문을 선택해주세요.");
+          return;
+        }
+        if (!rejectionReason) {
+          alert("주문 취소 사유를 작성해주세요.");
+          $("#quickCancelReason").trigger("focus");
+          return;
+        }
+
+        const payload = { rejectionReason: rejectionReason };
+
+        $("#quickCancelSubmitBtn").prop("disabled", true).text("처리 중...");
+
+        ownerOrderCancelAPI(storeId, orderId, payload)
+          .done(function () {
+            setStoredRejectionReason(orderId, rejectionReason);
+            alert("주문을 취소하였습니다.");
+            resetQuickCancelForm();
+            loadOrdersForQuickCancelModal();
+            const modalEl = document.getElementById("quickOrderCancelModal");
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) {
+              modal.hide();
+            }
+          })
+          .fail(function (xhr) {
+            if (rejectionReason && xhr.status === 400) {
+              alert("주문 접수 상태일 때만 주문을 취소할 수 있습니다.");
+            } else {
+              const msg =
+                xhr?.responseJSON?.message ||
+                xhr?.responseText ||
+                "주문 취소에 실패했습니다.";
+              alert(msg);
+            }
+            $("#quickCancelSubmitBtn").prop("disabled", false).text("주문 취소");
+          });
       });
 
       $("#storeKillBtn").on("click", function () {
