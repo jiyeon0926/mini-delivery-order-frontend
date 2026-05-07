@@ -534,6 +534,8 @@
             if (orderStatus === "DELIVERED") {
               loadOrders();
             }
+
+            loadOrderCount();
           })
           .fail(function () {
             const originalStatus = select.data("original");
