@@ -98,7 +98,7 @@ function updateStoreAPI(storeId, data) {
   });
 }
 
-// 가게 생성 API (사장)
+// 가게 생성 API
 function createStoreAPI(data) {
   return $.ajax({
     url: COMMON_URL + "/api/owner/stores",
@@ -107,7 +107,6 @@ function createStoreAPI(data) {
     data: JSON.stringify(data),
   });
 }
-
 
 // 가게 단건 조회 API
 function storeDetailAPI(storeId) {
@@ -179,7 +178,7 @@ function customerOrderDetailAPI(orderId) {
   });
 }
 
-// 주문 취소 (사용자)API
+// 주문 취소(사용자) API
 function cancelOrderAPI(orderId) {
   return $.ajax({
     url: COMMON_URL + `/api/orders/${orderId}`,
@@ -255,7 +254,7 @@ function deleteReviewAPI(storeId, reviewId) {
   });
 }
 
-// 메뉴 수정(사장) API
+// 메뉴 수정 API
 function updateMenuAPI(storeId, menuId, data) {
   return $.ajax({
     url: COMMON_URL + `/api/owner/stores/${storeId}/menus/${menuId}`,
@@ -307,10 +306,20 @@ function storeOrderDetailAPI(storeId, orderId) {
   });
 }
 
-// 주문 취소 (사장)API
+// 주문 취소(사장) API
 function ownerOrderCancelAPI(storeId, orderId, data) {
   return $.ajax({
     url: COMMON_URL + `/api/owner/stores/${storeId}/orders/${orderId}/reject`,
+    type: "PATCH",
+    contentType: "application/json",
+    data: JSON.stringify(data),
+  });
+}
+
+// 주문 상태 변경 API
+function updateOrderStatusAPI(storeId, orderId, data) {
+  return $.ajax({
+    url: COMMON_URL + `/api/owner/stores/${storeId}/orders/${orderId}/status`,
     type: "PATCH",
     contentType: "application/json",
     data: JSON.stringify(data),

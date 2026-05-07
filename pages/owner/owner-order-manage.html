@@ -330,32 +330,6 @@
       const params = new URLSearchParams(window.location.search);
       const storeId = params.get("storeId");
 
-      /** 목록 API에 rejectionReason이 없을 때: 직전에 취소한 사유를 표시용으로 보관 */
-      function rejectionReasonStorageKey(orderId) {
-        return `ownerOrderRejectReason:${storeId}:${String(orderId)}`;
-      }
-
-      function getStoredRejectionReason(orderId) {
-        try {
-          return (
-            sessionStorage.getItem(rejectionReasonStorageKey(orderId)) || ""
-          );
-        } catch (e) {
-          return "";
-        }
-      }
-
-      function setStoredRejectionReason(orderId, reason) {
-        try {
-          sessionStorage.setItem(
-            rejectionReasonStorageKey(orderId),
-            String(reason),
-          );
-        } catch (e) {
-          /* ignore quota / private mode */
-        }
-      }
-
       function loadProfile() {
         profileAPI().done(function (response) {
           const nickname = response.data.nickname;
@@ -409,16 +383,22 @@
         highlightOwnerSidebarNav();
       }
 
-      function formatOrderStatus(status) {
-        const map = {
-          PENDING: "주문 접수",
-          COOKING: "조리 중",
-          DELIVERING: "배달 중",
-          DELIVERED: "배달 완료",
-          REJECTED: "주문 취소",
-        };
+      function renderStatusSelect(order) {
+        if (order.orderStatus === "REJECTED") {
+          return `<span>주문 취소</span>`;
+        }
+        if (order.orderStatus === "DELIVERED") {
+          return `<span>배달 완료</span>`;
+        }
 
-        return map[status];
+        return `
+                <select class="order-status-select" data-order-id="${order.orderId}" data-original="${order.orderStatus}">
+                  <option value="PENDING" ${order.orderStatus === "PENDING" ? "selected" : ""}>주문 접수</option>
+                  <option value="COOKING" ${order.orderStatus === "COOKING" ? "selected" : ""}>조리 중</option>
+                  <option value="DELIVERING" ${order.orderStatus === "DELIVERING" ? "selected" : ""}>배달 중</option>
+                  <option value="DELIVERED" ${order.orderStatus === "DELIVERED" ? "selected" : ""}>배달 완료</option>
+                </select>
+              `;
       }
 
       function renderOrderTable(orders) {
@@ -452,7 +432,7 @@
                 <td>${o.totalAmount.toLocaleString()}원</td>
                 <td>${formatDateTime(o.createdAt)}</td>
                 <td class="text-muted">${cancelReason}</td>
-                <td>${formatOrderStatus(o.orderStatus)}</td>
+                <td>${renderStatusSelect(o)}</td>
               </tr>
           `;
           })
@@ -537,6 +517,32 @@
         loadOrders();
       });
 
+      $(".order-table").on("change", ".order-status-select", function () {
+        const select = $(this);
+        const orderId = select.data("order-id");
+        const data = {
+          orderStatus: select.val(),
+        };
+
+        updateOrderStatusAPI(storeId, orderId, data)
+          .done(function (response) {
+            const orderStatus = response.data.orderStatus;
+
+            select.val(orderStatus);
+            select.data("original", orderStatus);
+
+            if (orderStatus === "DELIVERED") {
+              loadOrders();
+            }
+          })
+          .fail(function () {
+            const originalStatus = select.data("original");
+            select.val(originalStatus);
+
+            alert("현재 상태에서는 주문 상태를 변경할 수 없어요.");
+          });
+      });
+
       // event.relatedTarget: data-bs-toggle="modal"이 붙은 요소를 가리킴
       $("#orderDetailModal").on("show.bs.modal", function (event) {
         const orderId = $(event.relatedTarget).data("order-id");
@@ -548,15 +554,17 @@
 
       $("#cancelBtn").on("click", function () {
         const orderId = $("#orderIdSelect").val();
-
-        const rejectionReason = $("#cancelReason").val().trim();
         if (!orderId) {
           alert("취소할 주문을 선택해주세요.");
+
           return;
         }
+
+        const rejectionReason = $("#cancelReason").val().trim();
         if (!rejectionReason) {
           alert("주문 취소 사유를 작성해주세요.");
           $("#cancelReason").focus();
+
           return;
         }
 
@@ -566,9 +574,9 @@
 
         ownerOrderCancelAPI(storeId, orderId, data)
           .done(function () {
-            setStoredRejectionReason(orderId, rejectionReason);
             alert("주문을 취소하였습니다.");
             $("#cancelReason").val("");
+
             loadOrderCount();
             loadOrders();
           })
