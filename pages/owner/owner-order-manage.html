@@ -337,7 +337,9 @@
 
       function getStoredRejectionReason(orderId) {
         try {
-          return sessionStorage.getItem(rejectionReasonStorageKey(orderId)) || "";
+          return (
+            sessionStorage.getItem(rejectionReasonStorageKey(orderId)) || ""
+          );
         } catch (e) {
           return "";
         }
@@ -419,36 +421,6 @@
         return map[status];
       }
 
-      function escapeHtml(text) {
-        if (text == null || text === "") {
-          return "";
-        }
-        return String(text)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;");
-      }
-
-      /** 목록 API에서 취소 사유 필드명이 다를 수 있어 보조 키 포함 */
-      function getOrderRejectionReason(o) {
-        return (
-          o.rejectionReason ??
-          o.rejection_reason ??
-          o.cancelReason ??
-          ""
-        );
-      }
-
-      function formatCancellationReasonCell(o) {
-        if (o.orderStatus !== "REJECTED") {
-          return "—";
-        }
-        const reason =
-          getOrderRejectionReason(o) || getStoredRejectionReason(o.orderId);
-        return reason ? escapeHtml(reason) : "—";
-      }
-
       function renderOrderTable(orders) {
         if (orders.length === 0) {
           $(".order-table").html(`
@@ -464,6 +436,9 @@
 
         const orderTableHtml = orders
           .map((o) => {
+            const cancelReason =
+              o.orderStatus === "REJECTED" ? o.rejectionReason : "-";
+
             return `
               <tr>
                 <td
@@ -476,7 +451,7 @@
                 </td>
                 <td>${o.totalAmount.toLocaleString()}원</td>
                 <td>${formatDateTime(o.createdAt)}</td>
-                <td class="text-muted">${formatCancellationReasonCell(o)}</td>
+                <td class="text-muted">${cancelReason}</td>
                 <td>${formatOrderStatus(o.orderStatus)}</td>
               </tr>
           `;
@@ -486,30 +461,16 @@
         $(".order-table").html(orderTableHtml);
       }
 
-      /** 상세 API: 단가는 price, 없으면 totalPrice ÷ 수량 */
-      function orderItemUnitPrice(item) {
-        if (item.price != null && item.price !== "") {
-          return Number(item.price);
-        }
-        const qty = Number(item.quantity);
-        const total = Number(item.totalPrice);
-        if (!qty || qty < 1) {
-          return total;
-        }
-        return Math.round(total / qty);
-      }
-
       function renderOrderDetailTable(data) {
         const address = data.customerAddress;
         const orderTableHtml = data.items
           // map(배열 요소, 요소의 인덱스) → 첫 번째 행에만 rowspan 적용
           .map((i, idx) => {
-            const unit = orderItemUnitPrice(i);
             return `
               <tr>
                 <td>${i.menuName}</td>
                 <td class="text-end">${i.quantity}</td>
-                <td class="text-end">${unit.toLocaleString()}원</td>
+                <td class="text-end">${i.price.toLocaleString()}원</td>
                 ${idx === 0 ? `<td rowspan="${data.items.length}">${address}</td>` : ""}
               </tr>
           `;
