@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <script src="/assets/js/color-modes.js"></script>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/css/common.css" rel="stylesheet" />
+    <title>주문 관리</title>
+
+    <style>
+      /* 사이드바 */
+      .sidebar {
+        width: 280px;
+        height: 100vh;
+        background: #f8f9fa;
+        padding: 20px;
+        border-right: 1px solid #ddd;
+      }
+
+      /* 토글 버튼 */
+      .btn-toggle {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        font-weight: 600;
+        color: #333;
+        background: none;
+        border: none;
+        padding: 10px;
+      }
+
+      .btn-toggle:hover {
+        background: #e9ecef;
+      }
+
+      /* 화살표 */
+      .btn-toggle::before {
+        content: "›";
+        margin-right: 10px;
+        transition: transform 0.2s;
+      }
+
+      .btn-toggle[aria-expanded="true"]::before {
+        transform: rotate(90deg);
+      }
+
+      /* 내부 메뉴 */
+      .btn-toggle-nav a {
+        display: block;
+        padding: 6px 20px;
+        color: #555;
+        text-decoration: none;
+      }
+
+      .btn-toggle-nav a:hover {
+        background: #e9ecef;
+        border-radius: 5px;
+      }
+
+      /* offcanvas(오른쪽 메뉴) 아래 우측에 회원탈퇴 고정 */
+      .offcanvas-body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .order-id-cell {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/pages/owner/owner-main.html">Eat Now</a>
+        <div class="d-flex align-items-center gap-3 ms-auto">
+          <!-- 햄버거 -->
+          <button
+            class="navbar-toggler ms-auto"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#navbarMenu"
+            aria-controls="navbarMenu"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <div
+          class="offcanvas offcanvas-end text-bg-dark"
+          tabindex="-1"
+          id="navbarMenu"
+          aria-labelledby="navbarMenuLabel"
+        >
+          <div class="offcanvas-header">
+            <div class="d-flex flex-column">
+              <h5 class="offcanvas-title mb-0" id="nickname"></h5>
+              <div class="small text-white-50" id="email"></div>
+            </div>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="offcanvas-body">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/pages/user/nickname.html"
+                  >닉네임 변경</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/pages/user/password.html"
+                  >비밀번호 변경</a
+                >
+              </li>
+              <li class="nav-item">
+                <button class="nav-link" id="logoutBtn">로그아웃</button>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/pages/owner/ownerSelfStore.html"
+                  >내 가게</a
+                >
+              </li>
+            </ul>
+
+            <div class="mt-auto d-flex justify-content-end">
+              <button
+                class="btn btn-link btn-sm text-danger p-0"
+                id="deleteAccountBtn"
+                type="button"
+              >
+                회원탈퇴
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="d-flex">
+      <!-- 사이드 바 -->
+      <div class="sidebar">
+        <ul class="list-unstyled store-side" id="storeSideAccordion"></ul>
+      </div>
+      <main class="flex-grow-1 ps-5 py-5">
+        <div class="container-fluid pe-4">
+          <!-- 오늘의 주문 요약 -->
+          <h2 class="fw-bold mb-4">오늘의 주문 요약</h2>
+          <div class="row row-cols-1 row-cols-md-4 g-3 mb-4">
+            <div class="col">
+              <div class="card bg-light border h-100">
+                <div
+                  class="card-body d-flex align-items-center justify-content-center"
+                >
+                  <div class="fw-bold fs-4">
+                    신규 주문: <span id="pending">0</span>건
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card bg-light border h-100">
+                <div
+                  class="card-body d-flex align-items-center justify-content-center"
+                >
+                  <div class="fw-bold fs-4">
+                    조리 중: <span id="cooking">0</span>건
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card bg-light border h-100">
+                <div
+                  class="card-body d-flex align-items-center justify-content-center"
+                >
+                  <div class="fw-bold fs-4">
+                    배달 중: <span id="delivering">0</span>건
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card bg-light border h-100">
+                <div
+                  class="card-body d-flex align-items-center justify-content-center"
+                >
+                  <div class="fw-bold fs-4">
+                    완료: <span id="delivered">0</span>건
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-4 align-items-start">
+            <!-- 주문 현황 상세 목록 -->
+            <section class="col-12 col-lg-8">
+              <h5 class="fw-bold fs-4 mb-3">주문 현황 상세 목록</h5>
+              <div class="card">
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table
+                      class="table table-striped table-hover align-middle mb-0"
+                    >
+                      <thead class="table-light">
+                        <tr>
+                          <th scope="col">주문 ID</th>
+                          <th scope="col">총가격</th>
+                          <th scope="col">주문 시간</th>
+                          <th scope="col">주문 취소 사유</th>
+                          <th scope="col">상태</th>
+                        </tr>
+                      </thead>
+                      <tbody class="order-table"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- 주문 취소 -->
+            <aside class="col-12 col-lg-4">
+              <h5 class="fw-bold fs-4 mb-3">주문 취소</h5>
+              <div class="card">
+                <div class="card-body d-flex flex-column gap-3">
+                  <div>
+                    <label for="orderIdSelect" class="form-label fw-bold"
+                      >주문 ID</label
+                    >
+                    <select id="orderIdSelect" class="form-select"></select>
+                  </div>
+                  <div>
+                    <label for="cancelReason" class="form-label fw-bold"
+                      >주문 취소 사유</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="cancelReason"
+                      placeholder="주문 취소 이유를 작성해주세요."
+                    />
+                  </div>
+                  <button
+                    class="btn btn-danger mt-2 align-self-start"
+                    type="button"
+                    id="cancelBtn"
+                  >
+                    주문 취소
+                  </button>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- 주문 상세 모달 (정적 구현) -->
+    <div
+      class="modal fade"
+      id="orderDetailModal"
+      tabindex="-1"
+      aria-labelledby="orderDetailModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold" id="orderDetailModalLabel">
+              주문 상세
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col">메뉴명</th>
+                    <th scope="col" class="text-end">갯수</th>
+                    <th scope="col" class="text-end">단가</th>
+                    <th scope="col">주소</th>
+                  </tr>
+                </thead>
+                <tbody class="order-detail-table"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              닫기
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="/assets/js/bootstrap.bundle.min.js"
+      class="astro-vvvwv3sm"
+    ></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/common.js"></script>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const storeId = params.get("storeId");
+
+      function loadProfile() {
+        profileAPI().done(function (response) {
+          const nickname = response.data.nickname;
+          const email = response.data.email;
+
+          $("#nickname").text(nickname);
+          $("#email").text(email);
+        });
+      }
+
+      function loadOrderCount() {
+        orderCountByStoreAPI(storeId).done(function (response) {
+          const pending = response.data.count.pending;
+          const cooking = response.data.count.cooking;
+          const delivering = response.data.count.delivering;
+          const delivered = response.data.count.delivered;
+
+          $("#pending").text(pending);
+          $("#cooking").text(cooking);
+          $("#delivering").text(delivering);
+          $("#delivered").text(delivered);
+        });
+      }
+
+      function renderStoreSide(data) {
+        const openIdx = getOwnerSidebarOpenIndex(data, storeId);
+        const sideHtml = data
+          .map((d, idx) => {
+            const collapseId = `store-side-${d.id}`;
+            const isOpen = idx === openIdx;
+            return `
+                    <li>
+                    <button class="btn-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="${isOpen}">
+                        ${d.name}
+                    </button>
+                    <div class="collapse${isOpen ? " show" : ""}" id="${collapseId}" data-bs-parent="#storeSideAccordion">
+                        <ul class="btn-toggle-nav list-unstyled small">
+                            <li><a href="/pages/owner/owner-quick.html?storeId=${d.id}">대시보드</a></li>
+                            <li><a href="/pages/owner/owner-store-manage.html?storeId=${d.id}">가게 관리</a></li>
+                            <li><a href="/pages/owner/owner-order-manage.html?storeId=${d.id}">주문 관리</a></li>
+                            <li><a href="/pages/owner/owner-review-manage.html?storeId=${d.id}">리뷰 관리</a></li>
+                            <li><a href="/pages/owner/owner-menu-manage.html?storeId=${d.id}">메뉴 관리</a></li>
+                        </ul>
+                    </div>
+                </li>
+                `;
+          })
+          .join("");
+
+        $(".store-side").html(sideHtml);
+        highlightOwnerSidebarNav();
+      }
+
+      function renderStatusSelect(order) {
+        if (order.orderStatus === "REJECTED") {
+          return `<span>주문 취소</span>`;
+        }
+        if (order.orderStatus === "DELIVERED") {
+          return `<span>배달 완료</span>`;
+        }
+
+        return `
+                <select class="order-status-select" data-order-id="${order.orderId}" data-original="${order.orderStatus}">
+                  <option value="PENDING" ${order.orderStatus === "PENDING" ? "selected" : ""}>주문 접수</option>
+                  <option value="COOKING" ${order.orderStatus === "COOKING" ? "selected" : ""}>조리 중</option>
+                  <option value="DELIVERING" ${order.orderStatus === "DELIVERING" ? "selected" : ""}>배달 중</option>
+                  <option value="DELIVERED" ${order.orderStatus === "DELIVERED" ? "selected" : ""}>배달 완료</option>
+                </select>
+              `;
+      }
+
+      function renderOrderTable(orders) {
+        if (orders.length === 0) {
+          $(".order-table").html(`
+                                  <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">
+                                      주문 내역이 없습니다.
+                                    </td>
+                                  </tr>
+                                `);
+
+          return;
+        }
+
+        const orderTableHtml = orders
+          .map((o) => {
+            const cancelReason =
+              o.orderStatus === "REJECTED" ? o.rejectionReason : "-";
+
+            return `
+              <tr>
+                <td
+                  class="order-id-cell text-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#orderDetailModal"
+                  data-order-id="${o.orderId}"
+                >
+                  ${o.orderNumber}
+                </td>
+                <td>${o.totalAmount.toLocaleString()}원</td>
+                <td>${formatDateTime(o.createdAt)}</td>
+                <td class="text-muted">${cancelReason}</td>
+                <td>${renderStatusSelect(o)}</td>
+              </tr>
+          `;
+          })
+          .join("");
+
+        $(".order-table").html(orderTableHtml);
+      }
+
+      function renderOrderDetailTable(data) {
+        const address = data.customerAddress;
+        const orderTableHtml = data.items
+          // map(배열 요소, 요소의 인덱스) → 첫 번째 행에만 rowspan 적용
+          .map((i, idx) => {
+            return `
+              <tr>
+                <td>${i.menuName}</td>
+                <td class="text-end">${i.quantity}</td>
+                <td class="text-end">${i.price.toLocaleString()}원</td>
+                ${idx === 0 ? `<td rowspan="${data.items.length}">${address}</td>` : ""}
+              </tr>
+          `;
+          })
+          .join("");
+
+        $(".order-detail-table").html(orderTableHtml);
+      }
+
+      function renderOrderIdSelect(orders) {
+        const cancellable = orders.filter((o) => o.orderStatus === "PENDING");
+        if (cancellable.length === 0) {
+          $("#orderIdSelect").html(
+            `<option value="">취소 가능한 주문이 없습니다</option>`,
+          );
+          return;
+        }
+
+        const orderIdSelectHtml = cancellable
+          .map((o) => {
+            return `
+              <option class="order-id" value="${o.orderId}">${o.orderNumber}</option>
+          `;
+          })
+          .join("");
+
+        $("#orderIdSelect").html(orderIdSelectHtml);
+      }
+
+      function loadOrders() {
+        orderListByStoreAPI(storeId)
+          .done(function (response) {
+            const orders = response.data.orders;
+
+            renderOrderTable(orders);
+            renderOrderIdSelect(orders);
+          })
+          .fail(function () {
+            $(".order-table").html(`
+                                  <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">
+                                      주문 내역이 없습니다.
+                                    </td>
+                                  </tr>
+                                `);
+            $("#orderIdSelect").html(
+              `<option value="">목록을 불러올 수 없습니다</option>`,
+            );
+          });
+      }
+
+      function loadStores() {
+        myStoresAPI().done(function (response) {
+          const data = response.data;
+
+          renderStoreSide(data);
+        });
+      }
+
+      $(document).ready(function () {
+        loadProfile();
+        loadOrderCount();
+        loadStores();
+        loadOrders();
+      });
+
+      $(".order-table").on("change", ".order-status-select", function () {
+        const select = $(this);
+        const orderId = select.data("order-id");
+        const data = {
+          orderStatus: select.val(),
+        };
+
+        updateOrderStatusAPI(storeId, orderId, data)
+          .done(function () {
+            loadOrders();
+            loadOrderCount();
+          })
+          .fail(function () {
+            const originalStatus = select.data("original");
+            select.val(originalStatus);
+
+            alert("현재 상태에서는 주문 상태를 변경할 수 없어요.");
+          });
+      });
+
+      // event.relatedTarget: data-bs-toggle="modal"이 붙은 요소를 가리킴
+      $("#orderDetailModal").on("show.bs.modal", function (event) {
+        const orderId = $(event.relatedTarget).data("order-id");
+
+        storeOrderDetailAPI(storeId, orderId).done(function (response) {
+          renderOrderDetailTable(response.data);
+        });
+      });
+
+      $("#cancelBtn").on("click", function () {
+        const orderId = $("#orderIdSelect").val();
+        if (!orderId) {
+          alert("취소할 주문을 선택해주세요.");
+
+          return;
+        }
+
+        const rejectionReason = $("#cancelReason").val().trim();
+        if (!rejectionReason) {
+          alert("주문 취소 사유를 작성해주세요.");
+          $("#cancelReason").focus();
+
+          return;
+        }
+
+        const data = {
+          rejectionReason: rejectionReason,
+        };
+
+        ownerOrderCancelAPI(storeId, orderId, data)
+          .done(function () {
+            alert("주문을 취소하였습니다.");
+            $("#cancelReason").val("");
+
+            loadOrderCount();
+            loadOrders();
+          })
+          .fail(function (xhr) {
+            if (rejectionReason && xhr.status === 400) {
+              alert("주문 접수 상태일 때만 주문을 취소할 수 있습니다.");
+            }
+          });
+      });
+    </script>
+  </body>
+</html>

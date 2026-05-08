@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Eat Now</title>
+    <title>리뷰내역</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
@@ -17,17 +17,6 @@
       <div class="container-fluid">
         <a class="navbar-brand" href="/index.html">Eat Now</a>
         <div class="d-flex align-items-center gap-3 ms-auto">
-          <form role="search">
-            <input
-              class="form-control d-none"
-              type="search"
-              placeholder="먹고싶은 메뉴나 가게를 찾아보세요"
-              aria-label="Search"
-              id="search"
-              style="width: 300px"
-            />
-          </form>
-          <i class="bi bi-search text-white fs-5 searchBtn"></i>
           <a
             class="nav-link text-white cart-menu d-none"
             href="/pages/customer/cart.html"
@@ -98,39 +87,10 @@
       </div>
     </nav>
     <main>
-      <!-- 배너 -->
-      <div
-        id="adCarousel"
-        class="carousel slide"
-        data-bs-ride="carousel"
-        data-bs-interval="2000"
-      >
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img
-              src="/assets/img/배너1.png"
-              class="d-block w-100"
-              alt="배너1"
-              style="height: 320px"
-            />
-          </div>
-          <div class="carousel-item">
-            <img
-              src="/assets/img/배너2.png"
-              class="d-block w-100"
-              alt="배너2"
-              style="height: 320px"
-            />
-          </div>
-        </div>
-      </div>
       <div class="container py-5">
-        <!-- 가게 목록 -->
-        <div
-          class="list-group mx-auto"
-          id="storeList"
-          style="max-width: 750px"
-        ></div>
+        <!-- 내 리뷰 목록 -->
+        <h3 class="text-center mb-5 fw-bold">리뷰내역</h3>
+        <div class="w-100 my-reviews" id="myReviewList"></div>
       </div>
     </main>
     <footer class="pt-3 pb-4 text-body-secondary text-center text-small">
@@ -143,73 +103,58 @@
     <script src="/assets/js/api.js"></script>
     <script src="/assets/js/common.js"></script>
     <script>
-      function renderStores(data) {
-        const storeListHtml = data
-          .map((d) => {
-            const statusText =
-              d.storeStatus === "OPEN" ? "영업 중" : "영업 종료";
-            const statusClass =
-              d.storeStatus === "OPEN" ? "text-success" : "text-danger";
+      function renderReviews(data) {
+        if (data.length === 0) {
+          $("#myReviewList").html(
+            "<p class='text-center'>작성한 리뷰가 없습니다.</p>",
+          );
+
+          return;
+        }
+
+        const myReviewListHtml = data
+          .map((r) => {
+            const stars = "★".repeat(r.rating);
 
             return `
-              <a
-              href="/pages/customer/store-detail.html?storeId=${d.id}"
-              class="list-group-item list-group-item-action d-flex gap-3 py-3"
-              >
-                <i class="bi bi-shop fs-5 ps-2"></i>
-                <div class="d-flex w-100 justify-content-between">
-                  <div class="d-flex flex-column">
-                    <div class="small text-warning mb-1">
-                      ★ ${d.averageRating} <span class="text-muted">(${d.reviewCount})</span>
+                <div class="card mb-4 ps-2 pe-2">
+                    <div class="card-body">
+                        <div class="d-flex w-100 justify-content-between py-2">
+                            <div class="d-flex flex-column">
+                                <a
+                                    href="/pages/customer/store-detail.html?storeId=${r.storeId}"
+                                    class="text-decoration-none text-dark"
+                                    ><p class="mb-1 fw-bold">${r.storeName}</p></a
+                                >
+                                <p class="small text-warning mb-3">${stars}</p>
+                                <p class="mb-1 content">${r.content}</p>
+                            </div>
+                            <div class="text-end small fw-semibold text-nowrap">${formatDateTime(r.createdAt)}</div>
+                        </div>
                     </div>
-                    <p class="mb-1 fw-bold">${d.name}</p>
-                    <p class="mb-1 text-muted small">최소 주문 ${d.minOrderAmount.toLocaleString()}원</p>
-                  </div>
-                  <div class="text-end pe-2 small fw-semibold ${statusClass}">
-                    ${statusText}
-                  </div>
                 </div>
-              </a>
             `;
           })
           .join("");
 
-        $("#storeList").html(storeListHtml);
+        $("#myReviewList").html(myReviewListHtml);
       }
 
-      // keyword 기본값 null
-      function loadStores(keyword = null) {
-        searchStoresAPI(keyword)
+      function loadReviews() {
+        myReviewsAPI()
           .done(function (response) {
-            renderStores(response.data);
+            renderReviews(response.data);
           })
           .fail(function () {
-            $("#storeList").html("<p class='text-center'>가게가 없습니다.</p>");
+            $("#myReviewList").html(
+              "<p class='text-center'>작성한 리뷰가 없습니다.</p>",
+            );
           });
       }
 
       $(document).ready(function () {
         updateCustomerAuthUI();
-        loadStores();
-      });
-
-      $(".searchBtn").on("click", function () {
-        const isHidden = $("#search").hasClass("d-none");
-        if (isHidden) {
-          $("#search").removeClass("d-none");
-        } else if (!isHidden) {
-          $("#search").addClass("d-none");
-          loadStores();
-        }
-      });
-
-      $("#search").on("keydown", function (e) {
-        if (e.key === "Enter") {
-          e.preventDefault();
-
-          const keyword = $(this).val().trim();
-          loadStores(keyword);
-        }
+        loadReviews();
       });
     </script>
   </body>
