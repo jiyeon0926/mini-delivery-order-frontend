@@ -14,6 +14,47 @@ Bootstrap과 jQuery를 기반으로 UI를 구현했으며, AJAX를 활용해 Spr
 [![프로젝트 구조](https://img.shields.io/badge/프로젝트%20구조-ADB5BD?style=for-the-badge)](#프로젝트-구조)
 
 ## 화면
+### 공통 UI
+| 화면 |
+| :---: |
+| 회원가입 유형 선택 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/d95221c6-3f48-42f0-bc97-7a6697df5468" />|
+| 고객 회원가입 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/0bca1ae5-a50f-4a80-896f-69fa3a2ccd15" />|
+| 사장 회원가입 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/17eb51e9-4bba-4fb5-a4ee-f8b5a08bba2c" />|
+| 로그인 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/1837e4a8-e32d-4cdc-8118-9d0fc86686bc" />|
+| 닉네임 변경 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/09cbe6de-3163-46d2-a560-5f0e6dd29d72" />|
+| 비밀번호 변경 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/77fdf1cc-c84b-4f20-ae57-f7c1619dafaf" />|
+
+### 고객 UI
+| 화면 |
+| :---: |
+| 가게 목록 조회 및 검색 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/8a3993c4-a5c6-4873-bc8d-521055e9f327" />|
+| 가게 상세 정보 및 메뉴 확인 후 수량을 선택해 장바구니에 담기 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/771f5e8f-3c79-44d4-9776-9f8179b334a2" />|
+| 장바구니 조회 및 수량 변경, 항목 삭제, 주문 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/c3963791-de7c-498c-af4b-33e3c563479f" />|
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/b97eaa1d-65f2-4ea6-ab69-188f80f6bd81" />|
+| 주문 내역 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/ef61c014-bd64-4665-8841-9ec3fb831334" />|
+| 주문 상세 조회 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/d8d1c1da-2299-4208-8864-c42fef185e1f" />|
+| 리뷰 작성 |
+| <img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/b22b34de-9c84-4813-8537-844607c256fe" />|
+| 리뷰 내역 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/a098fa92-f3af-4bbe-80d1-8f0c41b44f94" />|
+| 가게 리뷰 조회 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/a0eaddf8-eb43-4818-8c61-221b43a82d39" />|
+
+
+### 사장님 UI
+- 예정
+
 ## 기술 스택
 ![HTML](https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css&logoColor=white)
