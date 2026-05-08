@@ -14,7 +14,7 @@ Bootstrap과 jQuery를 기반으로 UI를 구현했으며, AJAX를 활용해 Spr
 [![프로젝트 구조](https://img.shields.io/badge/프로젝트%20구조-ADB5BD?style=for-the-badge)](#프로젝트-구조)
 
 ## 화면
-### 공통 UI
+### ⚙️ 공통 UI
 | 화면 |
 | :---: |
 | 회원가입 유형 선택 |
@@ -30,7 +30,9 @@ Bootstrap과 jQuery를 기반으로 UI를 구현했으며, AJAX를 활용해 Spr
 | 비밀번호 변경 |
 |<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/77fdf1cc-c84b-4f20-ae57-f7c1619dafaf" />|
 
-### 고객 UI
+<hr>
+
+### 👤 고객 UI
 | 화면 |
 | :---: |
 | 가게 목록 조회 및 검색 |
@@ -50,7 +52,9 @@ Bootstrap과 jQuery를 기반으로 UI를 구현했으며, AJAX를 활용해 Spr
 | 가게 리뷰 조회 |
 |<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/a0eaddf8-eb43-4818-8c61-221b43a82d39" />|
 
-### 사장님 UI
+<hr>
+
+### 🧑‍🍳 사장님 UI
 | 화면 |
 | :---: |
 | 사장님 메인 화면 |
