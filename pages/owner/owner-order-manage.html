@@ -525,16 +525,8 @@
         };
 
         updateOrderStatusAPI(storeId, orderId, data)
-          .done(function (response) {
-            const orderStatus = response.data.orderStatus;
-
-            select.val(orderStatus);
-            select.data("original", orderStatus);
-
-            if (orderStatus === "DELIVERED") {
-              loadOrders();
-            }
-
+          .done(function () {
+            loadOrders();
             loadOrderCount();
           })
           .fail(function () {
