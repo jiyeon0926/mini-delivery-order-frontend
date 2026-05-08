@@ -7,7 +7,7 @@ Bootstrap과 jQuery를 기반으로 UI를 구현했으며, AJAX를 활용해 Spr
 ![Period](https://img.shields.io/badge/Period-2026.04.06~2026.05.08-green)
 
 # 📍 목차
-[![화면](https://img.shields.io/badge/주요%20기능-FF6B6B?style=for-the-badge)](#화면)
+[![화면](https://img.shields.io/badge/화면-FF6B6B?style=for-the-badge)](#화면)
 [![기술 스택](https://img.shields.io/badge/기술%20스택-4DABF7?style=for-the-badge)](#기술-스택)
 [![설계](https://img.shields.io/badge/설계-845EF7?style=for-the-badge)](#설계)
 [![프로젝트 구조](https://img.shields.io/badge/프로젝트%20구조-ADB5BD?style=for-the-badge)](#프로젝트-구조)
@@ -15,6 +15,63 @@ Bootstrap과 jQuery를 기반으로 UI를 구현했으며, AJAX를 활용해 Spr
 
 ## 화면
 ## 기술 스택
+![HTML](https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![jQuery](https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+![AJAX](https://img.shields.io/badge/AJAX-005571?style=for-the-badge)
+
 ## 설계
 ## 프로젝트 구조
+```
+.
+|---.gitignore
+|---index.html
+|---README.md
+|
++---assets
+|   +---css
+|   |       bootstrap.min.css
+|   |       common.css
+|   |
+|   +---img
+|   |       배너1.png
+|   |       배너2.png
+|   |
+|   \---js
+|           api.js
+|           bootstrap.bundle.min.js
+|           color-modes.js
+|           common.js
+|
+\---pages
+    +---auth
+    |       login.html
+    |       signup.html
+    |
+    +---customer
+    |       cart.html
+    |       my-reviews.html
+    |       order-detail.html
+    |       order-list.html
+    |       review.html
+    |       store-detail.html
+    |       store-reviews.html
+    |
+    +---owner
+    |       owner-main.html
+    |       owner-menu-manage.html
+    |       owner-order-manage.html
+    |       owner-quick.html
+    |       owner-review-manage.html
+    |       owner-store-manage.html
+    |       owner-stores.html
+    |       ownerSelfStore.html
+    |
+    \---user
+            nickname.html
+            password.html
+```
+
 ## 역할 분담
