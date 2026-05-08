@@ -39,21 +39,36 @@ Bootstrap과 jQuery를 기반으로 UI를 구현했으며, AJAX를 활용해 Spr
 |<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/771f5e8f-3c79-44d4-9776-9f8179b334a2" />|
 | 장바구니 조회 및 수량 변경, 항목 삭제, 주문 |
 |<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/c3963791-de7c-498c-af4b-33e3c563479f" />|
-|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/b97eaa1d-65f2-4ea6-ab69-188f80f6bd81" />|
 | 주문 내역 |
 |<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/ef61c014-bd64-4665-8841-9ec3fb831334" />|
 | 주문 상세 조회 |
 |<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/d8d1c1da-2299-4208-8864-c42fef185e1f" />|
 | 리뷰 작성 |
-| <img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/b22b34de-9c84-4813-8537-844607c256fe" />|
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/b22b34de-9c84-4813-8537-844607c256fe" />|
 | 리뷰 내역 |
 |<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/a098fa92-f3af-4bbe-80d1-8f0c41b44f94" />|
 | 가게 리뷰 조회 |
 |<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/a0eaddf8-eb43-4818-8c61-221b43a82d39" />|
 
-
 ### 사장님 UI
-- 예정
+| 화면 |
+| :---: |
+| 사장님 메인 화면 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/e55d776c-ed08-4623-b2ee-209833791a17" />|
+| 가게 대시보드 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/4ecc04c6-b964-45c9-9916-5b2d46cdd080" />|
+| 가게 관리 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/87dd6cd2-8643-4d90-bc02-21839e6c1cb7" />|
+| 주문 관리 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/1b7b22f3-48d3-4104-a72f-e6a88eb5ccfe" />|
+| 리뷰 관리 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/9a6ddee3-7304-41c0-a7b6-3ff8327a1c82" />|
+| 메뉴 관리 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/9c980740-ba1d-4ff8-837d-9e9c17c67be1" />|
+| 내 가게 목록 조회 및 영업 상태 변경 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/ed3f4f4d-f407-44f3-b470-38f437b2bab0" />|
+| 새 가게 생성 |
+|<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/96ebc95a-d3df-4bb4-9528-6bd5a3670cf2" />|
 
 ## 기술 스택
 ![HTML](https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white)
